@@ -3,13 +3,21 @@ import { OnboardingLayout } from '@/components/onboarding/OnboardingLayout';
 import { Button } from '@/components/ui/button';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { Check, Star, Users } from 'lucide-react';
+import { toast } from '@/hooks/use-toast';
 
 export default function PaymentStep() {
   const { setCurrentStep } = useOnboarding();
   const navigate = useNavigate();
 
   const handleStartTrial = () => {
-    navigate('/');
+    toast({
+      title: "Payment Successful! 🎉",
+      description: "Welcome to NutriWise Premium. Redirecting to your plan...",
+    });
+    
+    setTimeout(() => {
+      navigate('/recipe-homepage');
+    }, 2000);
   };
 
   return (

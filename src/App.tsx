@@ -4,9 +4,11 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { OnboardingProvider } from "@/contexts/OnboardingContext";
+import { RecipeProvider } from "@/contexts/RecipeContext";
 import { DeveloperNav } from "@/components/onboarding/DeveloperNav";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import RecipeHomepage from "./pages/RecipeHomepage";
 
 // Onboarding pages
 import GenderStep from "./pages/onboarding/GenderStep";
@@ -39,9 +41,10 @@ const App = () => (
       <Toaster />
       <Sonner />
       <OnboardingProvider>
-        <BrowserRouter>
-          <DeveloperNav />
-          <Routes>
+        <RecipeProvider>
+          <BrowserRouter>
+            <DeveloperNav />
+            <Routes>
             <Route path="/" element={<Index />} />
             
             {/* Onboarding Flow */}
@@ -66,11 +69,13 @@ const App = () => (
             <Route path="/onboarding/results" element={<ResultsStep />} />
             <Route path="/onboarding/account" element={<AccountStep />} />
             <Route path="/onboarding/payment" element={<PaymentStep />} />
+            <Route path="/recipe-homepage" element={<RecipeHomepage />} />
             
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </BrowserRouter>
+          </BrowserRouter>
+        </RecipeProvider>
       </OnboardingProvider>
     </TooltipProvider>
   </QueryClientProvider>
