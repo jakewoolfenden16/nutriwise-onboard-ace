@@ -23,37 +23,39 @@ export default function InfoProgress() {
       title="Your journey ahead"
       subtitle="Let's visualise your progress."
     >
-      <div className="bg-card rounded-2xl p-8 shadow-md border border-border space-y-6">
+      <div className="bg-card rounded-2xl p-8 shadow-md border border-border space-y-8">
+        {/* Icon Section */}
         <div className="flex items-center justify-center">
-          <Target className="h-16 w-16 text-primary" />
+          <div className="bg-primary/10 rounded-full p-6">
+            <Target className="h-16 w-16 text-primary" />
+          </div>
         </div>
 
+        {/* Main Message */}
+        <div className="text-center space-y-2">
+          <h2 className="text-2xl font-bold text-foreground">
+            Losing <span className="text-primary">{difference.toFixed(1)}{unit}</span> is a realistic target
+          </h2>
+          <p className="text-lg text-muted-foreground">You've got this.</p>
+        </div>
+
+        {/* Progress Bar Visualization */}
         <div className="space-y-3">
-          <div className="flex justify-between items-center p-4 bg-secondary rounded-xl">
-            <span className="text-muted-foreground">Current</span>
-            <span className="font-bold text-lg">{currentWeight}{unit}</span>
+          <div className="relative h-3 bg-secondary rounded-full overflow-hidden">
+            <div 
+              className="absolute inset-0 bg-gradient-to-r from-primary via-primary to-orange-500 rounded-full"
+              style={{ width: '100%' }}
+            />
           </div>
-
-          <div className="flex items-center justify-center">
-            <div className="h-12 w-px bg-border" />
+          
+          <div className="flex justify-between items-center text-sm">
+            <span className="text-muted-foreground font-medium">Current</span>
+            <span className="text-primary font-bold">Goal: -{difference.toFixed(1)}{unit}</span>
           </div>
-
-          <div className="flex justify-between items-center p-4 bg-primary/10 rounded-xl border border-primary/20">
-            <span className="text-muted-foreground">Goal</span>
-            <span className="font-bold text-lg text-primary">{goalWeight}{unit}</span>
-          </div>
-        </div>
-
-        <div className="bg-accent/10 rounded-xl p-4 border border-accent/20">
-          <p className="text-center font-medium text-foreground">
-            Losing <span className="text-primary font-bold">{difference.toFixed(1)}{unit}</span> is a realistic target
-            <br />
-            <span className="text-sm text-muted-foreground">— you've got this.</span>
-          </p>
         </div>
       </div>
 
-      <NavigationButtons onNext={handleNext} nextLabel="Let's continue →" />
+      <NavigationButtons onNext={handleNext} nextLabel="Let's do it →" />
     </OnboardingLayout>
   );
 }
