@@ -10,7 +10,8 @@ export interface OnboardingData {
   age?: number;
   weightGoal?: number;
   overallGoal?: string;
-  goalSpeed?: number;
+  goalSpeed?: number; // Legacy, keeping for backwards compatibility
+  weeklyWeightLoss?: number; // New: kg per week (0.1 - 1.5)
   specificDiet?: string;
   cuisinePreferences?: string[];
   otherNotes?: string;
