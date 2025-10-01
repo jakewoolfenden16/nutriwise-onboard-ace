@@ -18,7 +18,7 @@ const getMotivationalText = (step: number) => {
 
 export const ProgressBar = () => {
   const { currentStep } = useOnboarding();
-  const totalSteps = 22;
+  const totalSteps = 21;
   const progress = (currentStep / totalSteps) * 100;
 
   return (

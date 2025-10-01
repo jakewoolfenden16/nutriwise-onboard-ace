@@ -23,7 +23,7 @@ export default function MotivationStep() {
   const handleNext = () => {
     updateData({ motivation: selected, motivationOther: other });
     setCurrentStep(15);
-    navigate('/onboarding/info-motivational');
+    navigate('/onboarding/info-personalising');
   };
 
   return (

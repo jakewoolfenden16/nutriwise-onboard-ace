@@ -23,7 +23,6 @@ import DietStep from "./pages/onboarding/DietStep";
 import CuisineStep from "./pages/onboarding/CuisineStep";
 import AvoidStep from "./pages/onboarding/AvoidStep";
 import MotivationStep from "./pages/onboarding/MotivationStep";
-import InfoMotivational from "./pages/onboarding/InfoMotivational";
 import InfoPersonalising from "./pages/onboarding/InfoPersonalising";
 import MealPreferencesStep from "./pages/onboarding/MealPreferencesStep";
 import FastingStep from "./pages/onboarding/FastingStep";
@@ -60,7 +59,6 @@ const App = () => (
             <Route path="/onboarding/cuisine" element={<CuisineStep />} />
             <Route path="/onboarding/avoid" element={<AvoidStep />} />
             <Route path="/onboarding/motivation" element={<MotivationStep />} />
-            <Route path="/onboarding/info-motivational" element={<InfoMotivational />} />
             <Route path="/onboarding/info-personalising" element={<InfoPersonalising />} />
             <Route path="/onboarding/meals" element={<MealPreferencesStep />} />
             <Route path="/onboarding/fasting" element={<FastingStep />} />

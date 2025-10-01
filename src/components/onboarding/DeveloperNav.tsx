@@ -19,14 +19,13 @@ const steps = [
   { num: 12, name: 'Cuisine Preferences', path: '/onboarding/cuisine' },
   { num: 13, name: 'Foods to Avoid', path: '/onboarding/avoid' },
   { num: 14, name: 'Motivation', path: '/onboarding/motivation' },
-  { num: 15, name: 'Info: Motivational', path: '/onboarding/info-motivational' },
-  { num: 16, name: 'Info: Personalising', path: '/onboarding/info-personalising' },
-  { num: 17, name: 'Meal Preferences', path: '/onboarding/meals' },
-  { num: 18, name: 'Fasting', path: '/onboarding/fasting' },
-  { num: 19, name: 'Loading', path: '/onboarding/loading' },
-  { num: 20, name: 'Plan Ready', path: '/onboarding/results' },
-  { num: 21, name: 'Account Creation', path: '/onboarding/account' },
-  { num: 22, name: 'Payment', path: '/onboarding/payment' },
+  { num: 15, name: 'Info: Personalising', path: '/onboarding/info-personalising' },
+  { num: 16, name: 'Meal Preferences', path: '/onboarding/meals' },
+  { num: 17, name: 'Fasting', path: '/onboarding/fasting' },
+  { num: 18, name: 'Loading', path: '/onboarding/loading' },
+  { num: 19, name: 'Plan Ready', path: '/onboarding/results' },
+  { num: 20, name: 'Account Creation', path: '/onboarding/account' },
+  { num: 21, name: 'Payment', path: '/onboarding/payment' },
 ];
 
 export const DeveloperNav = () => {
