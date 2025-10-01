@@ -46,7 +46,7 @@ export default function InfoSustainable() {
         </div>
       </div>
 
-      <NavigationButtons onNext={handleNext} nextLabel="Sounds good →" />
+      <NavigationButtons onNext={handleNext} nextLabel="Every time! →" />
     </OnboardingLayout>
   );
 }

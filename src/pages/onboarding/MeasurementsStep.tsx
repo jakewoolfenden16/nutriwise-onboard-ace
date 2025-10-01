@@ -4,7 +4,7 @@ import { OnboardingLayout } from '@/components/onboarding/OnboardingLayout';
 import { NavigationButtons } from '@/components/onboarding/NavigationButtons';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { Button } from '@/components/ui/button';
-import { Slider } from '@/components/ui/slider';
+import { ScrollPicker } from '@/components/ui/scroll-picker';
 
 export default function MeasurementsStep() {
   const { data, updateData, setCurrentStep } = useOnboarding();
@@ -54,38 +54,33 @@ export default function MeasurementsStep() {
           </Button>
         </div>
 
-        {/* Height */}
-        <div className="bg-card rounded-2xl p-6 shadow-md border border-border">
-          <div className="text-center mb-4">
-            <p className="text-3xl font-bold text-primary">
-              {heightUnit === 'cm' ? height : height.toFixed(1)}
-            </p>
-            <p className="text-muted-foreground">{heightUnit === 'cm' ? 'cm' : 'ft'}</p>
+        {/* Height & Weight Pickers */}
+        <div className="grid grid-cols-2 gap-4">
+          <div className="bg-card rounded-2xl p-4 shadow-md border border-border">
+            <p className="text-center text-sm text-muted-foreground mb-2">Height</p>
+            <ScrollPicker
+              value={height}
+              onChange={setHeight}
+              min={heightUnit === 'cm' ? 140 : 4.5}
+              max={heightUnit === 'cm' ? 220 : 7.5}
+              step={heightUnit === 'cm' ? 1 : 0.1}
+              suffix={heightUnit === 'cm' ? ' cm' : ' ft'}
+              formatter={heightUnit === 'cm' ? undefined : (val) => val.toFixed(1)}
+            />
           </div>
-          <Slider
-            value={[height]}
-            onValueChange={(vals) => setHeight(vals[0])}
-            max={heightUnit === 'cm' ? 220 : 7.5}
-            min={heightUnit === 'cm' ? 140 : 4.5}
-            step={heightUnit === 'cm' ? 1 : 0.1}
-          />
-        </div>
 
-        {/* Weight */}
-        <div className="bg-card rounded-2xl p-6 shadow-md border border-border">
-          <div className="text-center mb-4">
-            <p className="text-3xl font-bold text-primary">
-              {weightUnit === 'kg' ? weight : Math.round(weight)}
-            </p>
-            <p className="text-muted-foreground">{weightUnit}</p>
+          <div className="bg-card rounded-2xl p-4 shadow-md border border-border">
+            <p className="text-center text-sm text-muted-foreground mb-2">Weight</p>
+            <ScrollPicker
+              value={weight}
+              onChange={setWeight}
+              min={weightUnit === 'kg' ? 40 : 88}
+              max={weightUnit === 'kg' ? 150 : 330}
+              step={weightUnit === 'kg' ? 0.5 : 1}
+              suffix={` ${weightUnit}`}
+              formatter={weightUnit === 'kg' ? (val) => val.toFixed(1) : undefined}
+            />
           </div>
-          <Slider
-            value={[weight]}
-            onValueChange={(vals) => setWeight(vals[0])}
-            max={weightUnit === 'kg' ? 150 : 330}
-            min={weightUnit === 'kg' ? 40 : 88}
-            step={weightUnit === 'kg' ? 0.5 : 1}
-          />
         </div>
       </div>
 
