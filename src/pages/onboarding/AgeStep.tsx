@@ -13,7 +13,7 @@ export default function AgeStep() {
   const handleNext = () => {
     updateData({ age });
     setCurrentStep(6);
-    navigate('/onboarding/weight-goal');
+    navigate('/onboarding/overall-goal');
   };
 
   return (

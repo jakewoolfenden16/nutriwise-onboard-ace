@@ -29,8 +29,8 @@ export default function WeightGoalStep() {
 
   const handleNext = () => {
     updateData({ weightGoal: goalWeight });
-    setCurrentStep(7);
-    navigate('/onboarding/overall-goal');
+    setCurrentStep(8);
+    navigate('/onboarding/info-progress');
   };
 
   const handleDrag = (e: React.MouseEvent | React.TouchEvent) => {
