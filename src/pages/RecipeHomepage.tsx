@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Sparkles } from 'lucide-react';
 import { Confetti } from '@/components/onboarding/Confetti';
-import { ProgressCard } from '@/components/recipe/ProgressCard';
 import { DayCard } from '@/components/recipe/DayCard';
-import { TodaysFocus } from '@/components/recipe/TodaysFocus';
 import { TipCard } from '@/components/recipe/TipCard';
 import { BottomNavigation } from '@/components/recipe/BottomNavigation';
 
@@ -12,7 +10,7 @@ import { useRecipe } from '@/contexts/RecipeContext';
 export default function RecipeHomepage() {
   const [showConfetti, setShowConfetti] = useState(true);
   const [showContent, setShowContent] = useState(false);
-  const { mealPlans, currentDay, healthScore } = useRecipe();
+  const { mealPlans, currentDay } = useRecipe();
 
   useEffect(() => {
     const confettiTimer = setTimeout(() => setShowConfetti(false), 4000);
@@ -22,8 +20,6 @@ export default function RecipeHomepage() {
       clearTimeout(contentTimer);
     };
   }, []);
-
-  const todaysPlan = mealPlans[currentDay - 1];
 
   const personalizedTips = [
     "💧 Start your day with a glass of lemon water to boost metabolism",
@@ -55,19 +51,6 @@ export default function RecipeHomepage() {
             <p className="text-center text-muted-foreground text-base md:text-lg mb-6">
               Let's fuel your goals, one meal at a time
             </p>
-
-            <div className="max-w-sm mx-auto">
-              <ProgressCard score={healthScore} />
-            </div>
-          </div>
-        </div>
-
-        {/* Today's Focus - Sticky */}
-        <div className={`px-4 mb-6 transition-all duration-700 delay-200 ${
-          showContent ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-        }`}>
-          <div className="max-w-screen-xl mx-auto">
-            <TodaysFocus plan={todaysPlan} />
           </div>
         </div>
 
@@ -96,38 +79,6 @@ export default function RecipeHomepage() {
               {personalizedTips.map((tip, index) => (
                 <TipCard key={index} tip={tip} delay={index * 100} />
               ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Progress Tracker */}
-        <div className={`px-4 mb-8 transition-all duration-700 delay-500 ${
-          showContent ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-        }`}>
-          <div className="max-w-screen-xl mx-auto">
-            <h2 className="text-2xl font-bold text-foreground mb-4 font-['Montserrat']">Today's Macros</h2>
-            <div className="grid grid-cols-3 gap-3">
-              <div className="bg-card rounded-xl p-4 shadow-sm border border-border text-center">
-                <p className="text-xs text-muted-foreground mb-1">Protein</p>
-                <p className="text-2xl font-bold text-foreground">{todaysPlan.macros.protein}g</p>
-                <div className="mt-2 h-1.5 bg-muted rounded-full overflow-hidden">
-                  <div className="h-full bg-primary rounded-full w-3/4 animate-fade-in" />
-                </div>
-              </div>
-              <div className="bg-card rounded-xl p-4 shadow-sm border border-border text-center">
-                <p className="text-xs text-muted-foreground mb-1">Carbs</p>
-                <p className="text-2xl font-bold text-foreground">{todaysPlan.macros.carbs}g</p>
-                <div className="mt-2 h-1.5 bg-muted rounded-full overflow-hidden">
-                  <div className="h-full bg-primary rounded-full w-4/5 animate-fade-in" />
-                </div>
-              </div>
-              <div className="bg-card rounded-xl p-4 shadow-sm border border-border text-center">
-                <p className="text-xs text-muted-foreground mb-1">Fat</p>
-                <p className="text-2xl font-bold text-foreground">{todaysPlan.macros.fat}g</p>
-                <div className="mt-2 h-1.5 bg-muted rounded-full overflow-hidden">
-                  <div className="h-full bg-primary rounded-full w-2/3 animate-fade-in" />
-                </div>
-              </div>
             </div>
           </div>
         </div>
