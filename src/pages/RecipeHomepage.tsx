@@ -6,7 +6,7 @@ import { DayCard } from '@/components/recipe/DayCard';
 import { TodaysFocus } from '@/components/recipe/TodaysFocus';
 import { TipCard } from '@/components/recipe/TipCard';
 import { BottomNavigation } from '@/components/recipe/BottomNavigation';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+
 import { useRecipe } from '@/contexts/RecipeContext';
 
 export default function RecipeHomepage() {
@@ -71,26 +71,19 @@ export default function RecipeHomepage() {
           </div>
         </div>
 
-        {/* 7-Day Carousel */}
+        {/* 7-Day Plan - Vertical Stack */}
         <div className={`mb-8 transition-all duration-700 delay-300 ${
           showContent ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
         }`}>
-          <div className="px-4 mb-4">
-            <h2 className="text-2xl font-bold text-foreground font-['Montserrat']">Your 7-Day Journey</h2>
-            <p className="text-sm text-muted-foreground">Swipe to explore each day</p>
+          <div className="px-4 mb-4 max-w-screen-xl mx-auto">
+            <h2 className="text-2xl font-bold text-foreground font-['Montserrat']">Your 7-Day Plan</h2>
           </div>
           
-          <Carousel className="w-full px-4" opts={{ align: "start", loop: false }}>
-            <CarouselContent className="-ml-4">
-              {mealPlans.map((plan) => (
-                <CarouselItem key={plan.day} className="pl-4 basis-[85%] md:basis-[45%] lg:basis-[30%]">
-                  <DayCard plan={plan} isToday={plan.day === currentDay} />
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious className="left-2" />
-            <CarouselNext className="right-2" />
-          </Carousel>
+          <div className="px-4 space-y-3 max-w-screen-xl mx-auto">
+            {mealPlans.map((plan) => (
+              <DayCard key={plan.day} plan={plan} isToday={plan.day === currentDay} />
+            ))}
+          </div>
         </div>
 
         {/* Personalized Tips */}
