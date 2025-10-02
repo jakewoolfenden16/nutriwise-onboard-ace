@@ -52,6 +52,18 @@ interface RecipeContextType {
   mealPlans: MealPlan[];
   currentDay: number;
   healthScore: number;
+  userName?: string;
+  weeklyTargets: {
+    calories: number;
+    protein: number;
+    carbs: number;
+    fat: number;
+  };
+  estimatedWeightChange: {
+    min: number;
+    max: number;
+    unit: 'kg' | 'lbs';
+  };
 }
 
 const RecipeContext = createContext<RecipeContextType | undefined>(undefined);
@@ -60,7 +72,19 @@ export const RecipeProvider = ({ children }: { children: ReactNode }) => {
   const value = {
     mealPlans: mockMealPlans,
     currentDay: 1,
-    healthScore: 95
+    healthScore: 95,
+    userName: undefined, // TODO: Get from OnboardingContext when integrated
+    weeklyTargets: {
+      calories: 2100,
+      protein: 150,
+      carbs: 210,
+      fat: 78
+    },
+    estimatedWeightChange: {
+      min: -0.5,
+      max: -0.7,
+      unit: 'kg' as const
+    }
   };
 
   return <RecipeContext.Provider value={value}>{children}</RecipeContext.Provider>;
