@@ -10,7 +10,6 @@ interface MealTimelineProps {
   };
   onSwapMeal: (mealId: string) => void;
   onMarkEaten: (mealId: string) => void;
-  onViewRecipe: (mealId: string) => void;
   eatenMeals: Set<string>;
 }
 
@@ -24,7 +23,6 @@ export const MealTimeline = ({
   meals,
   onSwapMeal,
   onMarkEaten,
-  onViewRecipe,
   eatenMeals
 }: MealTimelineProps) => {
   // Build ordered timeline: Breakfast → Snack 1 → Lunch → Snack 2 → Dinner → Snack 3
@@ -49,7 +47,6 @@ export const MealTimeline = ({
           isLast={index === orderedMeals.length - 1}
           onSwap={onSwapMeal}
           onMarkEaten={onMarkEaten}
-          onViewRecipe={onViewRecipe}
           isEaten={eatenMeals.has(entry.meal.id)}
         />
       ))}

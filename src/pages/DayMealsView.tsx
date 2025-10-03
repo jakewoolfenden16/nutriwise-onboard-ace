@@ -37,10 +37,6 @@ export default function DayMealsView() {
     console.log('Profile clicked');
   };
 
-  const handleViewRecipe = (mealId: string) => {
-    navigate(`/recipe/${mealId}/${day}`);
-  };
-
   const allDays = mealPlans.map(p => ({
     day: p.day,
     dayName: p.dayName,
@@ -68,7 +64,6 @@ export default function DayMealsView() {
           meals={plan.meals}
           onSwapMeal={(mealId) => console.log('Swap meal:', mealId)}
           onMarkEaten={handleMarkEaten}
-          onViewRecipe={handleViewRecipe}
           eatenMeals={eatenMeals}
         />
       </div>
