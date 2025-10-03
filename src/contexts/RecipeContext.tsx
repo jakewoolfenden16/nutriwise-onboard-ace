@@ -1,4 +1,4 @@
-import { createContext, useContext, ReactNode } from 'react';
+import { createContext, useContext, ReactNode, useState } from 'react';
 
 export interface Meal {
   id: string;
@@ -64,16 +64,33 @@ interface RecipeContextType {
     max: number;
     unit: 'kg' | 'lbs';
   };
+  eatenMeals: Set<string>;
+  markMealAsEaten: (mealId: string) => void;
+  unmarkMealAsEaten: (mealId: string) => void;
 }
 
 const RecipeContext = createContext<RecipeContextType | undefined>(undefined);
 
 export const RecipeProvider = ({ children }: { children: ReactNode }) => {
+  const [eatenMeals, setEatenMeals] = useState<Set<string>>(new Set());
+
+  const markMealAsEaten = (mealId: string) => {
+    setEatenMeals(prev => new Set([...prev, mealId]));
+  };
+
+  const unmarkMealAsEaten = (mealId: string) => {
+    setEatenMeals(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(mealId);
+      return newSet;
+    });
+  };
+
   const value = {
     mealPlans: mockMealPlans,
     currentDay: 1,
     healthScore: 95,
-    userName: undefined, // TODO: Get from OnboardingContext when integrated
+    userName: undefined,
     weeklyTargets: {
       calories: 2100,
       protein: 150,
@@ -84,7 +101,10 @@ export const RecipeProvider = ({ children }: { children: ReactNode }) => {
       min: -0.5,
       max: -0.7,
       unit: 'kg' as const
-    }
+    },
+    eatenMeals,
+    markMealAsEaten,
+    unmarkMealAsEaten
   };
 
   return <RecipeContext.Provider value={value}>{children}</RecipeContext.Provider>;

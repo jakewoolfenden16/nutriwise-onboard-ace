@@ -1,4 +1,5 @@
 import { MealPlan } from '@/contexts/RecipeContext';
+import { useNavigate } from 'react-router-dom';
 
 interface DayCardProps {
   plan: MealPlan;
@@ -30,6 +31,7 @@ const mealTypeLabels = {
 };
 
 export const DayCard = ({ plan, isToday }: DayCardProps) => {
+  const navigate = useNavigate();
 
   const allMeals = [
     ...plan.meals.breakfast,
@@ -41,9 +43,12 @@ export const DayCard = ({ plan, isToday }: DayCardProps) => {
   const dayColorClass = dayColors[(plan.day - 1) % 7];
 
   return (
-    <div className={`relative bg-card rounded-xl shadow-sm border transition-all duration-300 overflow-hidden ${
-      isToday ? 'border-primary' : 'border-border'
-    }`}>
+    <div 
+      onClick={() => navigate(`/day/${plan.day}`)}
+      className={`relative bg-card rounded-xl shadow-sm border transition-all duration-300 overflow-hidden cursor-pointer hover:shadow-lg ${
+        isToday ? 'border-primary' : 'border-border'
+      }`}
+    >
       {/* Left colored sidebar */}
       <div className={`absolute left-0 top-0 bottom-0 w-1 ${dayColorClass}`} />
       

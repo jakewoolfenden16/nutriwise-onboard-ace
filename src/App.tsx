@@ -9,6 +9,7 @@ import { DeveloperNav } from "@/components/onboarding/DeveloperNav";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import RecipeHomepage from "./pages/RecipeHomepage";
+import DayMealsView from "./pages/DayMealsView";
 
 // Onboarding pages
 import GenderStep from "./pages/onboarding/GenderStep";
@@ -70,6 +71,8 @@ const App = () => (
             <Route path="/onboarding/account" element={<AccountStep />} />
             <Route path="/onboarding/payment" element={<PaymentStep />} />
             <Route path="/recipe-homepage" element={<RecipeHomepage />} />
+            <Route path="/recipe" element={<RecipeHomepage />} />
+            <Route path="/day/:dayNumber" element={<DayMealsView />} />
             
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
