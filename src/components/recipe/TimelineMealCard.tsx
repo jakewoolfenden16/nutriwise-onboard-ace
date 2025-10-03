@@ -1,5 +1,5 @@
 import { Meal } from '@/contexts/RecipeContext';
-import { RefreshCw, Check, Clock } from 'lucide-react';
+import { RefreshCw, Check, Clock, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface TimelineMealCardProps {
@@ -10,6 +10,7 @@ interface TimelineMealCardProps {
   isLast: boolean;
   onSwap: (mealId: string) => void;
   onMarkEaten: (mealId: string) => void;
+  onViewRecipe: (mealId: string) => void;
   isEaten: boolean;
 }
 
@@ -28,6 +29,7 @@ export const TimelineMealCard = ({
   isLast,
   onSwap,
   onMarkEaten,
+  onViewRecipe,
   isEaten
 }: TimelineMealCardProps) => {
   const dotColor = mealTypeColors[mealType];
@@ -81,25 +83,36 @@ export const TimelineMealCard = ({
           </div>
 
           {/* Actions */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="flex gap-3">
             <Button
               variant="outline"
               size="sm"
               onClick={() => onSwap(meal.id)}
-              className="gap-2"
+              className="gap-2 flex-1"
             >
               <RefreshCw className="w-4 h-4" />
               Swap
             </Button>
-            <Button
-              variant={isEaten ? 'secondary' : 'default'}
-              size="sm"
-              onClick={() => onMarkEaten(meal.id)}
-              className="gap-2"
-            >
-              <Check className={`w-4 h-4 ${isEaten ? 'text-green-500' : ''}`} />
-              {isEaten ? 'Eaten ✓' : 'Mark Eaten'}
-            </Button>
+            <div className="flex flex-col gap-2 flex-1">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onViewRecipe(meal.id)}
+                className="gap-2"
+              >
+                <BookOpen className="w-4 h-4" />
+                Recipe
+              </Button>
+              <Button
+                variant={isEaten ? 'secondary' : 'default'}
+                size="sm"
+                onClick={() => onMarkEaten(meal.id)}
+                className="gap-2"
+              >
+                <Check className={`w-4 h-4 ${isEaten ? 'text-green-500' : ''}`} />
+                {isEaten ? 'Eaten ✓' : 'Mark Eaten'}
+              </Button>
+            </div>
           </div>
         </div>
       </div>
