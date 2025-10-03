@@ -29,6 +29,20 @@ export default function DayMealsView() {
     }
   };
 
+  const handleDayChange = (newDay: number) => {
+    navigate(`/day/${newDay}`);
+  };
+
+  const handleProfileClick = () => {
+    console.log('Profile clicked');
+  };
+
+  const allDays = mealPlans.map(p => ({
+    day: p.day,
+    dayName: p.dayName,
+    date: p.date
+  }));
+
   return (
     <div className="min-h-screen bg-background pb-20">
       <DailySummary
@@ -38,7 +52,11 @@ export default function DayMealsView() {
         protein={plan.macros.protein}
         carbs={plan.macros.carbs}
         fat={plan.macros.fat}
+        currentDay={day}
+        allDays={allDays}
         onBack={handleBack}
+        onDayChange={handleDayChange}
+        onProfileClick={handleProfileClick}
       />
       
       <div className="max-w-2xl mx-auto px-4 py-6">
