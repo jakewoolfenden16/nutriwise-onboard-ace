@@ -29,6 +29,10 @@ export default function DayMealsView() {
     }
   };
 
+  const handleViewRecipe = (mealId: string) => {
+    navigate(`/recipe/${mealId}/${day}`);
+  };
+
   const handleDayChange = (newDay: number) => {
     navigate(`/day/${newDay}`);
   };
@@ -64,6 +68,7 @@ export default function DayMealsView() {
           meals={plan.meals}
           onSwapMeal={(mealId) => console.log('Swap meal:', mealId)}
           onMarkEaten={handleMarkEaten}
+          onViewRecipe={handleViewRecipe}
           eatenMeals={eatenMeals}
         />
       </div>
