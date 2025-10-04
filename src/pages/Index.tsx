@@ -53,7 +53,7 @@ const Index = () => {
               Nutrition that actually fuels your training.
             </h2>
             
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid md:grid-cols-3 gap-6">
               {[
                 {
                   icon: Target,
