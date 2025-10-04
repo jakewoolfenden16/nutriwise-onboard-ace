@@ -30,17 +30,17 @@ const Index = () => {
 
           {/* CTA */}
           <div className="animate-slide-up pt-4">
-            <Button
-              size="lg"
-              onClick={() => navigate('/onboarding/gender')}
-              className="h-16 px-12 text-lg font-bold shadow-xl hover:shadow-2xl transition-all"
-            >
-              Start Free
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
-            <p className="text-sm text-muted-foreground mt-4 font-medium">
-              2-minute setup · Free 7-day trial · Cancel anytime
-            </p>
+          <Button
+            size="lg"
+            onClick={() => navigate('/onboarding/gender')}
+            className="h-16 px-12 text-lg font-bold shadow-xl hover:shadow-2xl transition-all"
+          >
+            Get My Plan — £1.99 One-Time
+            <ArrowRight className="ml-2 h-5 w-5" />
+          </Button>
+          <p className="text-sm text-muted-foreground mt-4 font-medium">
+            Takes 2 minutes · One-time payment · No subscription
+          </p>
           </div>
         </div>
       </div>
@@ -59,11 +59,6 @@ const Index = () => {
                   icon: Target,
                   title: 'Macro-Accurate Plans',
                   description: 'Dial in your protein, carbs, and fats for your goal, whether that\'s cutting, bulking, or maintenance.',
-                },
-                {
-                  icon: Dumbbell,
-                  title: 'Gym-Day Sync',
-                  description: 'Rest-day vs training-day plans that adjust your calories and macros automatically.',
                 },
                 {
                   icon: UtensilsCrossed,
@@ -94,45 +89,6 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Results Section */}
-      <div className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-4xl md:text-5xl font-bold text-center mb-4 text-foreground">
-              Real progress. Real numbers.
-            </h2>
-            <p className="text-center text-muted-foreground text-lg mb-16">
-              Results from lifters who take nutrition seriously.
-            </p>
-            
-            <div className="grid md:grid-cols-3 gap-6">
-              {[
-                {
-                  metric: '+4 kg',
-                  detail: 'lean mass in 8 weeks',
-                },
-                {
-                  metric: '−3 kg',
-                  detail: 'fat, same strength output',
-                },
-                {
-                  metric: '100%',
-                  detail: 'adherence with zero burnout',
-                },
-              ].map((result, i) => (
-                <div
-                  key={i}
-                  className="text-center p-8 bg-card rounded-xl border-2 border-border"
-                >
-                  <div className="text-5xl font-extrabold text-primary mb-3">{result.metric}</div>
-                  <div className="text-muted-foreground font-medium">{result.detail}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Final CTA */}
       <div className="bg-foreground py-20">
         <div className="container mx-auto px-4">
@@ -149,7 +105,7 @@ const Index = () => {
               onClick={() => navigate('/onboarding/gender')}
               className="h-16 px-12 text-lg font-bold mt-6 bg-background text-foreground border-2 border-background hover:bg-background/90"
             >
-              Start My Plan Free
+              Get My Plan — £1.99 One-Time
             </Button>
           </div>
         </div>
