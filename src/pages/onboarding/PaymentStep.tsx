@@ -23,7 +23,7 @@ export default function PaymentStep() {
         {/* Hero Section */}
         <div className="text-center space-y-6 mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-foreground leading-tight">
-            7 Days of Meals.<br />150g+ Protein, Every Day.
+            1 Day of Meals.<br />150g+ Protein, Every Day.
           </h1>
           <div className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-full text-lg font-semibold">
             £1.99 – One-time payment
@@ -35,7 +35,7 @@ export default function PaymentStep() {
           <h2 className="text-2xl font-bold text-foreground mb-6">What You're Getting</h2>
           <div className="space-y-4">
             {[
-              'Complete 7-day meal plan — Breakfast, lunch, dinner, and snacks hitting your exact protein targets',
+              'Complete 1-day meal plan — Breakfast, lunch, dinner, and snacks hitting your exact protein targets',
               'Detailed recipes — Step-by-step instructions, prep times, and macro breakdowns for every meal',
               'Macro tracking sheet — Daily protein, carbs, fat, and calorie totals that match your goals',
             ].map((item, i) => (
@@ -94,7 +94,7 @@ export default function PaymentStep() {
 
         {/* Refund Statement */}
         <p className="text-center text-sm text-muted-foreground leading-relaxed">
-          You&apos;ll get your 7-day high-protein plan instantly. If it&apos;s not for you, just drop us a message and we&apos;ll refund you.
+          You&apos;ll get your 1-day high-protein plan instantly. If it&apos;s not for you, just drop us a message and we&apos;ll refund you.
         </p>
       </div>
     </div>
