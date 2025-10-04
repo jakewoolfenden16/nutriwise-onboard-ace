@@ -2,9 +2,6 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Check, Clock, Lock, X } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
-import { RecipeCardPreview } from '@/components/recipe/RecipeCardPreview';
-import recipeSnackImage from '@/assets/recipe-snack.png';
-import recipeMondayImage from '@/assets/recipe-monday.png';
 
 export default function PaymentStep() {
   const navigate = useNavigate();
@@ -47,31 +44,6 @@ export default function PaymentStep() {
                 <p className="text-foreground leading-relaxed">{item}</p>
               </div>
             ))}
-          </div>
-        </div>
-
-        {/* Recipe Preview */}
-        <div className="mb-10">
-          <p className="text-center text-sm text-muted-foreground mb-4">Examples from your plan</p>
-          <div className="grid md:grid-cols-2 gap-6">
-            <RecipeCardPreview
-              title="Protein Smoothie"
-              calories={220}
-              protein={20}
-              carbs={28}
-              fat={4}
-              time={5}
-              image={recipeSnackImage}
-            />
-            <RecipeCardPreview
-              title="Greek Yogurt and Berries"
-              calories={400}
-              protein={26}
-              carbs={53}
-              fat={8}
-              time={5}
-              image={recipeMondayImage}
-            />
           </div>
         </div>
 
