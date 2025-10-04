@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { X, Menu } from 'lucide-react';
 
 const steps = [
+  { num: 0, name: 'Landing Page', path: '/' },
   { num: 1, name: 'Gender', path: '/onboarding/gender' },
   { num: 2, name: 'Workout Frequency', path: '/onboarding/workout' },
   { num: 3, name: 'Info: Sustainable Results', path: '/onboarding/info-sustainable' },
@@ -35,7 +36,9 @@ export const DeveloperNav = () => {
   const { resetData, setCurrentStep } = useOnboarding();
 
   const handleStepClick = (step: number, path: string) => {
-    setCurrentStep(step);
+    if (step > 0) {
+      setCurrentStep(step);
+    }
     navigate(path);
     setIsOpen(false);
   };
