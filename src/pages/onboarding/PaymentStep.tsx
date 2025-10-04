@@ -23,7 +23,7 @@ export default function PaymentStep() {
         {/* Hero Section */}
         <div className="text-center space-y-6 mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-foreground leading-tight">
-            1 Day of Meals.<br />150g+ Protein, Every Day.
+            One Day. 150 g+ Protein. Dialled-In Nutrition.
           </h1>
           <div className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-full text-lg font-semibold">
             £1.99 – One-time payment
