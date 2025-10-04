@@ -73,15 +73,13 @@ const Index = () => {
               ].map((feature, i) => (
                 <div
                   key={i}
-                  className="flex items-start gap-6 p-8 bg-card rounded-xl border-2 border-border hover:border-primary transition-all"
+                  className="flex flex-col items-center text-center p-8 bg-card rounded-xl border-2 border-border hover:border-primary transition-all"
                 >
-                  <div className="bg-primary rounded-lg p-4 flex-shrink-0">
+                  <div className="bg-primary rounded-lg p-4 mb-4">
                     <feature.icon className="h-7 w-7 text-primary-foreground" />
                   </div>
-                  <div>
-                    <h3 className="font-bold text-xl mb-2 text-foreground">{feature.title}</h3>
-                    <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
-                  </div>
+                  <h3 className="font-bold text-xl mb-2 text-foreground">{feature.title}</h3>
+                  <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
                 </div>
               ))}
             </div>
