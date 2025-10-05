@@ -69,12 +69,17 @@ export default function PaymentStep() {
         </div>
 
         {/* CTA Button */}
-        <Button 
-          onClick={handlePurchase} 
-          className="w-full h-14 text-lg font-semibold mb-6"
-        >
-          Get My Plan for £1.99 →
-        </Button>
+        <div className="w-full mb-6">
+          <a
+            href="https://woolfend.gumroad.com/l/dakpgp"
+            className="w-full inline-flex items-center justify-center h-14 text-lg font-semibold rounded-md bg-primary text-primary-foreground hover:opacity-90 transition"
+            data-gumroad-single-product="true"
+          >
+            Get My Plan for £1.99 →
+          </a>
+          <script src="https://gumroad.com/js/gumroad.js"></script>
+        </div>
+
 
         {/* Trust Anchors */}
         <div className="flex items-center justify-center gap-6 mb-6 text-sm text-muted-foreground flex-wrap">
