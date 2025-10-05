@@ -73,7 +73,7 @@ export default function PaymentStep() {
           <iframe
             src="https://gumroad.com/l/dakpgp?embedded=true"
             width="100%"
-            height="60"
+            height="70"
             frameBorder="0"
             title="Gumroad Checkout"
           ></iframe>
