@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
+import type { CalculationResponse } from '@/lib/types';
 
 export interface OnboardingData {
   gender?: string;
@@ -29,6 +30,8 @@ interface OnboardingContextType {
   resetData: () => void;
   currentStep: number;
   setCurrentStep: (step: number) => void;
+  calculatedTargets: CalculationResponse['data'] | null;
+  setCalculatedTargets: (targets: CalculationResponse['data']) => void;
 }
 
 const OnboardingContext = createContext<OnboardingContextType | undefined>(undefined);
@@ -36,18 +39,37 @@ const OnboardingContext = createContext<OnboardingContextType | undefined>(undef
 export const OnboardingProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [data, setData] = useState<OnboardingData>({});
   const [currentStep, setCurrentStep] = useState(1);
+  const [calculatedTargets, setCalculatedTargets] = useState<CalculationResponse['data'] | null>(null);
 
   const updateData = (newData: Partial<OnboardingData>) => {
-    setData((prev) => ({ ...prev, ...newData }));
+    console.log('📝 OnboardingContext - Updating data:', newData);
+    console.log('📝 OnboardingContext - Previous data:', data);
+    setData((prev) => {
+      const updated = { ...prev, ...newData };
+      console.log('📝 OnboardingContext - New merged data:', updated);
+      return updated;
+    });
   };
 
   const resetData = () => {
+    console.log('🔄 OnboardingContext - Resetting all data');
     setData({});
     setCurrentStep(1);
+    setCalculatedTargets(null);
   };
 
   return (
-    <OnboardingContext.Provider value={{ data, updateData, resetData, currentStep, setCurrentStep }}>
+    <OnboardingContext.Provider 
+      value={{ 
+        data, 
+        updateData, 
+        resetData, 
+        currentStep, 
+        setCurrentStep,
+        calculatedTargets,
+        setCalculatedTargets
+      }}
+    >
       {children}
     </OnboardingContext.Provider>
   );

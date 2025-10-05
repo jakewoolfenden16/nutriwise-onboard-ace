@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { OnboardingProvider } from "@/contexts/OnboardingContext";
 import { RecipeProvider } from "@/contexts/RecipeContext";
+import { AuthProvider } from "@/contexts/AuthContext"; // ADD THIS
 import { DeveloperNav } from "@/components/onboarding/DeveloperNav";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
@@ -34,6 +35,7 @@ import LoadingStep from "./pages/onboarding/LoadingStep";
 import ResultsStep from "./pages/onboarding/ResultsStep";
 import AccountStep from "./pages/onboarding/AccountStep";
 import PaymentStep from "./pages/onboarding/PaymentStep";
+import MealPlanView from "./pages/onboarding/MealPlanView"
 
 const queryClient = new QueryClient();
 
@@ -43,44 +45,47 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <OnboardingProvider>
-          <RecipeProvider>
-            <DeveloperNav />
-            <Routes>
-            <Route path="/" element={<Index />} />
-            
-            {/* Onboarding Flow */}
-            <Route path="/onboarding/gender" element={<GenderStep />} />
-            <Route path="/onboarding/workout" element={<WorkoutStep />} />
-            <Route path="/onboarding/info-sustainable" element={<InfoSustainable />} />
-            <Route path="/onboarding/measurements" element={<MeasurementsStep />} />
-            <Route path="/onboarding/age" element={<AgeStep />} />
-            <Route path="/onboarding/weight-goal" element={<WeightGoalStep />} />
-            <Route path="/onboarding/overall-goal" element={<OverallGoalStep />} />
-            <Route path="/onboarding/info-progress" element={<InfoProgress />} />
-            <Route path="/onboarding/goal-speed" element={<GoalSpeedStep />} />
-            <Route path="/onboarding/info-comparison" element={<InfoComparison />} />
-            <Route path="/onboarding/diet" element={<DietStep />} />
-            <Route path="/onboarding/cuisine" element={<CuisineStep />} />
-            <Route path="/onboarding/avoid" element={<AvoidStep />} />
-            <Route path="/onboarding/motivation" element={<MotivationStep />} />
-            <Route path="/onboarding/info-personalising" element={<InfoPersonalising />} />
-            <Route path="/onboarding/meals" element={<MealPreferencesStep />} />
-            <Route path="/onboarding/fasting" element={<FastingStep />} />
-            <Route path="/onboarding/loading" element={<LoadingStep />} />
-            <Route path="/onboarding/results" element={<ResultsStep />} />
-            <Route path="/onboarding/account" element={<AccountStep />} />
-            <Route path="/onboarding/payment" element={<PaymentStep />} />
-            <Route path="/recipe-homepage" element={<RecipeHomepage />} />
-            <Route path="/recipe" element={<RecipeHomepage />} />
-            <Route path="/day/:dayNumber" element={<DayMealsView />} />
-            <Route path="/recipe/:mealId/:dayNumber" element={<RecipeDetailPage />} />
-            
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-            </Routes>
-          </RecipeProvider>
-        </OnboardingProvider>
+        <AuthProvider> {/* ADD THIS WRAPPER */}
+          <OnboardingProvider>
+            <RecipeProvider>
+              <DeveloperNav />
+              <Routes>
+                <Route path="/" element={<Index />} />
+                
+                {/* Onboarding Flow */}
+                <Route path="/onboarding/gender" element={<GenderStep />} />
+                <Route path="/onboarding/workout" element={<WorkoutStep />} />
+                <Route path="/onboarding/info-sustainable" element={<InfoSustainable />} />
+                <Route path="/onboarding/measurements" element={<MeasurementsStep />} />
+                <Route path="/onboarding/age" element={<AgeStep />} />
+                <Route path="/onboarding/weight-goal" element={<WeightGoalStep />} />
+                <Route path="/onboarding/overall-goal" element={<OverallGoalStep />} />
+                <Route path="/onboarding/info-progress" element={<InfoProgress />} />
+                <Route path="/onboarding/goal-speed" element={<GoalSpeedStep />} />
+                <Route path="/onboarding/info-comparison" element={<InfoComparison />} />
+                <Route path="/onboarding/diet" element={<DietStep />} />
+                <Route path="/onboarding/cuisine" element={<CuisineStep />} />
+                <Route path="/onboarding/avoid" element={<AvoidStep />} />
+                <Route path="/onboarding/motivation" element={<MotivationStep />} />
+                <Route path="/onboarding/info-personalising" element={<InfoPersonalising />} />
+                <Route path="/onboarding/meals" element={<MealPreferencesStep />} />
+                <Route path="/onboarding/fasting" element={<FastingStep />} />
+                <Route path="/onboarding/account" element={<AccountStep />} />
+                <Route path="/onboarding/loading" element={<LoadingStep />} />
+                <Route path="/onboarding/results" element={<ResultsStep />} />
+                <Route path="/onboarding/meal-plan-view" element={<MealPlanView />} />
+                <Route path="/onboarding/payment" element={<PaymentStep />} />
+                <Route path="/recipe-homepage" element={<RecipeHomepage />} />
+                <Route path="/recipe" element={<RecipeHomepage />} />
+                <Route path="/day/:dayNumber" element={<DayMealsView />} />
+                <Route path="/recipe/:mealId/:dayNumber" element={<RecipeDetailPage />} />
+                
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </RecipeProvider>
+          </OnboardingProvider>
+        </AuthProvider> {/* CLOSE THE WRAPPER */}
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
