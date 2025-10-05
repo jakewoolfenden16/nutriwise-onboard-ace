@@ -70,16 +70,14 @@ export default function PaymentStep() {
 
         {/* CTA Button */}
         <div className="w-full mb-6">
-          <a
-            href="https://woolfend.gumroad.com/l/dakpgp"
-            className="w-full inline-flex items-center justify-center h-14 text-lg font-semibold rounded-md bg-primary text-primary-foreground hover:opacity-90 transition"
-            data-gumroad-single-product="true"
-          >
-            Get My Plan for £1.99 →
-          </a>
-          <script src="https://gumroad.com/js/gumroad.js"></script>
+          <iframe
+            src="https://gumroad.com/l/dakpgp?embedded=true"
+            width="100%"
+            height="60"
+            frameBorder="0"
+            title="Gumroad Checkout"
+          ></iframe>
         </div>
-
 
         {/* Trust Anchors */}
         <div className="flex items-center justify-center gap-6 mb-6 text-sm text-muted-foreground flex-wrap">
