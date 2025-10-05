@@ -53,7 +53,7 @@ export default function PaymentStep() {
           <div className="space-y-3">
             {[
               'Build lean muscle faster with 150–200g protein daily',
-              'Meal prep made simple — recipes you\'ll actually enjoy',
+              'Meal prep made simple — recipes you&apos;ll actually enjoy',
               'No more guesswork — hit your macros with confidence',
             ].map((item, i) => (
               <p key={i} className="text-foreground leading-relaxed">
@@ -69,12 +69,15 @@ export default function PaymentStep() {
         </div>
 
         {/* CTA Button */}
-        <Button 
-          onClick={handlePurchase} 
-          className="w-full h-14 text-lg font-semibold mb-6"
-        >
-          Get My Plan for £1.99 →
-        </Button>
+        <div className="w-full mb-6">
+          <iframe
+            src="https://gumroad.com/l/dakpgp?embedded=true"
+            width="100%"
+            height="60"
+            frameBorder="0"
+            title="Gumroad Checkout"
+          ></iframe>
+        </div>
 
         {/* Trust Anchors */}
         <div className="flex items-center justify-center gap-6 mb-6 text-sm text-muted-foreground flex-wrap">
