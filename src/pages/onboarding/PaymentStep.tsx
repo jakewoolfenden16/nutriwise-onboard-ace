@@ -53,7 +53,7 @@ export default function PaymentStep() {
           <div className="space-y-3">
             {[
               'Build lean muscle faster with 150–200g protein daily',
-              'Meal prep made simple — recipes you'll actually enjoy',
+              'Meal prep made simple — recipes you\'ll actually enjoy',
               'No more guesswork — hit your macros with confidence',
             ].map((item, i) => (
               <p key={i} className="text-foreground leading-relaxed">
