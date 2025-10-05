@@ -20,15 +20,11 @@ export default function OverallGoalStep() {
   const handleNext = () => {
     updateData({ overallGoal: selected });
     
-    if (selected === 'lose') {
-      // User wants to lose weight, show weight goal step
+   
       setCurrentStep(7);
       navigate('/onboarding/weight-goal');
-    } else {
-      // User wants to maintain or build, skip weight goal
-      setCurrentStep(8);
-      navigate('/onboarding/info-progress');
-    }
+ 
+    
   };
 
   return (

@@ -14,7 +14,7 @@ export default function FastingStep() {
   const handleNext = () => {
     updateData({ fasting });
     setCurrentStep(19);
-    navigate('/onboarding/loading');
+    navigate('/onboarding/results');
   };
 
   return (

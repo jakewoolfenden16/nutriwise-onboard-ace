@@ -5,6 +5,8 @@ import { NavigationButtons } from '@/components/onboarding/NavigationButtons';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { Confetti } from '@/components/onboarding/Confetti';
 import { Award, Zap, Target, Sparkles } from 'lucide-react';
+import { calculateTargets } from '@/lib/api';
+import type { QuestionnaireData, CalculationResponse } from '@/lib/types';
 
 // Helper function to generate dynamic headline
 const generateHeadline = (data: any, difference: number) => {
@@ -60,7 +62,20 @@ const generateContextualTips = (data: any) => {
     tips.push('Stay hydrated with 8 glasses of water daily.');
   }
   
-  return tips.slice(0, 3); // Return max 3 tips
+  return tips.slice(0, 3);
+};
+
+// Map frontend goal values to backend expected values
+const mapGoalToBackend = (goal: string): string => {
+  const goalMap: Record<string, string> = {
+    'lose': 'Fat Loss',
+    'build': 'Build Muscle',
+    'maintain': 'General Health / Maintenance',
+  };
+  
+  const mappedGoal = goalMap[goal.toLowerCase()] || 'General Health / Maintenance';
+  console.log(`🎯 Mapping goal: "${goal}" → "${mappedGoal}"`);
+  return mappedGoal;
 };
 
 export default function ResultsStep() {
@@ -70,29 +85,154 @@ export default function ResultsStep() {
   const [animatedCarbs, setAnimatedCarbs] = useState(0);
   const [animatedFat, setAnimatedFat] = useState(0);
   const [showCards, setShowCards] = useState(false);
-  
-  const { data, setCurrentStep } = useOnboarding();
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [calculationData, setCalculationData] = useState<CalculationResponse['data'] | null>(null);
+
+  const { data, setCurrentStep, setCalculatedTargets } = useOnboarding();
   const navigate = useNavigate();
+
+  console.log('🔍 ResultsStep - Component mounted with data:', data);
+  console.log('🔍 ResultsStep - Data validation:', {
+    hasGender: !!data.gender,
+    hasHeight: !!data.height,
+    hasWeight: !!data.weight,
+    hasAge: !!data.age,
+    hasWorkoutFreq: !!data.workoutFrequency,
+    hasGoal: !!data.overallGoal,
+    hasWeightGoal: !!data.weightGoal,
+    allDataKeys: Object.keys(data),
+    dataValues: data
+  });
 
   const goalWeight = data.weightGoal || 65;
   const currentWeight = data.weight || 70;
   const difference = Math.abs(currentWeight - goalWeight);
 
-  const calories = 2100;
-  const protein = 150;
-  const carbs = 200;
-  const fat = 70;
-
   const headline = generateHeadline(data, difference);
   const contextualTips = generateContextualTips(data);
 
+  // Fetch calculation targets when component mounts
   useEffect(() => {
+    const fetchTargets = async () => {
+      console.log('🚀 useEffect - Calculating targets on component mount');
+      
+      // Check if we have the required data
+      const hasRequiredData = data.gender && data.height && data.weight && data.age;
+      if (!hasRequiredData) {
+        console.warn('⚠️ Missing required onboarding data:', {
+          hasGender: !!data.gender,
+          hasHeight: !!data.height,
+          hasWeight: !!data.weight,
+          hasAge: !!data.age
+        });
+        setError('Please complete all previous onboarding steps first.');
+        setIsLoading(false);
+        return;
+      }
+      
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        const weeklyRate = data.weeklyWeightLoss || 0.5;
+
+        // Map the goal to backend expected format
+        const mappedGoal = mapGoalToBackend(data.overallGoal || 'maintain');
+
+        console.log('📊 Preparing request data:', {
+          gender: data.gender,
+          height: data.height,
+          age: data.age,
+          weight: data.weight,
+          workouts_per_week: data.workoutFrequency,
+          goal: mappedGoal,
+          diet: data.specificDiet,
+          weight_goal: data.weightGoal,
+          planned_weekly_weight_loss: weeklyRate
+        });
+
+        const requestData: QuestionnaireData = {
+          gender: (data.gender || 'male') as 'male' | 'female',
+          height: data.height || 0,
+          age: data.age || 0,
+          weight: data.weight || 0,
+          workouts_per_week: data.workoutFrequency || 0,
+          goal: mappedGoal,
+          diet: data.specificDiet || 'none',
+          additional_considerations: [
+            ...(data.foodsToAvoid || []),
+            data.otherNotes || '',
+          ].filter(Boolean).join(', '),
+          weight_goal: data.weightGoal || 0,
+          planned_weekly_weight_loss: weeklyRate,
+        };
+
+        console.log('📤 Sending calculate targets request:', requestData);
+
+        // Call the PUBLIC API endpoint
+        const response = await calculateTargets(requestData);
+        
+        console.log('✅ Calculate targets API response:', response);
+        console.log('📦 Response structure:', {
+          success: response?.success,
+          hasData: response?.data !== undefined,
+          hasNutritionalTargets: response?.data?.nutritional_targets !== undefined,
+          calories: response?.data?.nutritional_targets?.calories,
+          protein: response?.data?.nutritional_targets?.protein_grams,
+          allKeys: response ? Object.keys(response) : []
+        });
+
+        if (!response || !response.success || !response.data) {
+          throw new Error('Invalid response received from API');
+        }
+
+        // Store the response
+        setCalculationData(response.data);
+        
+        // Save to context if available
+        if (setCalculatedTargets) {
+          console.log('💾 Saving calculated targets to context');
+          setCalculatedTargets(response);
+        }
+
+        console.log('✅ Targets calculated successfully');
+      } catch (err) {
+        console.error('❌ Error calculating targets:', err);
+        console.error('❌ Error details:', {
+          type: err instanceof Error ? 'Error object' : typeof err,
+          message: err instanceof Error ? err.message : String(err),
+          stack: err instanceof Error ? err.stack : 'No stack trace'
+        });
+        
+        setError(err instanceof Error ? err.message : 'Failed to calculate targets');
+      } finally {
+        setIsLoading(false);
+        console.log('🏁 Calculate targets fetch complete');
+      }
+    };
+
+    fetchTargets();
+  }, []);
+
+  // Animation effect - trigger after data is loaded
+  useEffect(() => {
+    if (!calculationData || isLoading) return;
+
+    console.log('✨ Starting animations with real data');
     setShowConfetti(true);
     
-    // Stagger card animations
     setTimeout(() => setShowCards(true), 300);
     
-    // Count up animation for macros
+    // Use REAL values from API response - handle nested structure
+    const nutritionalTargets = calculationData.nutritional_targets || calculationData;
+    const targetCalories = nutritionalTargets.calories || 2100;
+    const targetProtein = nutritionalTargets.protein_grams || nutritionalTargets.protein || 150;
+    const targetCarbs = nutritionalTargets.carbs_grams || nutritionalTargets.carbs || 200;
+    const targetFat = nutritionalTargets.fat_grams || nutritionalTargets.fat || 70;
+
+    console.log('🎯 Animation targets:', { targetCalories, targetProtein, targetCarbs, targetFat });
+    
     const duration = 1500;
     const steps = 60;
     const interval = duration / steps;
@@ -102,21 +242,80 @@ export default function ResultsStep() {
       step++;
       const progress = step / steps;
       
-      setAnimatedCalories(Math.round(calories * progress));
-      setAnimatedProtein(Math.round(protein * progress));
-      setAnimatedCarbs(Math.round(carbs * progress));
-      setAnimatedFat(Math.round(fat * progress));
+      setAnimatedCalories(Math.round(targetCalories * progress));
+      setAnimatedProtein(Math.round(targetProtein * progress));
+      setAnimatedCarbs(Math.round(targetCarbs * progress));
+      setAnimatedFat(Math.round(targetFat * progress));
       
       if (step >= steps) clearInterval(timer);
     }, interval);
     
     return () => clearInterval(timer);
-  }, []);
+  }, [calculationData, isLoading]);
 
   const handleNext = () => {
-    setCurrentStep(21);
+    console.log('➡️ Navigating to account step');
+    console.log('💾 Calculated targets stored:', calculationData);
+    setCurrentStep(20);
     navigate('/onboarding/account');
   };
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <OnboardingLayout
+        title="Calculating your personalized plan..."
+        subtitle="This will only take a moment"
+        hideProgress
+      >
+        <div className="flex flex-col items-center justify-center py-12 space-y-4">
+          <div className="relative">
+            <div className="absolute inset-0 bg-primary/20 rounded-full animate-pulse blur-xl" />
+            <div className="relative bg-gradient-to-br from-primary to-accent rounded-full p-6">
+              <Sparkles className="h-12 w-12 text-white animate-spin" />
+            </div>
+          </div>
+          <p className="text-sm text-muted-foreground">Analyzing your profile...</p>
+        </div>
+      </OnboardingLayout>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    const isMissingData = error.includes('complete all previous');
+    
+    return (
+      <OnboardingLayout
+        title="Oops! Something went wrong"
+        subtitle={isMissingData ? "We need a bit more information" : "We couldn't calculate your nutrition targets"}
+        hideProgress
+      >
+        <div className="space-y-6">
+          <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-6 text-center">
+            <p className="text-sm text-destructive mb-4">{error}</p>
+            <div className="flex gap-2 justify-center">
+              {isMissingData ? (
+                <button
+                  onClick={() => navigate('/onboarding/gender')}
+                  className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+                >
+                  Start Onboarding
+                </button>
+              ) : (
+                <button
+                  onClick={() => window.location.reload()}
+                  className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+                >
+                  Try Again
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      </OnboardingLayout>
+    );
+  }
 
   return (
     <>
@@ -198,10 +397,10 @@ export default function ResultsStep() {
           </div>
         </div>
 
-        <NavigationButtons 
-          onNext={handleNext} 
-          nextLabel="See your full 7-day plan →" 
-          hideBack 
+        <NavigationButtons
+          onNext={handleNext}
+          nextLabel="See your meal plan →"
+          hideBack
         />
       </OnboardingLayout>
     </>
