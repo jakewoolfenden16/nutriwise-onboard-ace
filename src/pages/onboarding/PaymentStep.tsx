@@ -63,19 +63,13 @@ export default function PaymentStep() {
           </div>
         </div>
 
-        {/* Price Summary */}
-        <div className="text-center mb-8">
-          <p className="text-2xl font-bold text-foreground">Total value: £1.99</p>
-        </div>
-
         {/* CTA Button */}
         <a
           href="https://buy.stripe.com/5kQdRacbWg4RgdNd1McV200"
-          className="w-full inline-flex items-center justify-center h-14 text-lg font-semibold rounded-md bg-primary text-primary-foreground hover:opacity-90 transition"
+          className="w-full inline-flex items-center justify-center h-14 text-lg font-semibold rounded-md bg-primary text-primary-foreground hover:opacity-90 transition mb-6"
         >
           Get My Plan for £1.99 →
         </a>
-
 
         {/* Trust Anchors */}
         <div className="flex items-center justify-center gap-6 mb-6 text-sm text-muted-foreground flex-wrap">
