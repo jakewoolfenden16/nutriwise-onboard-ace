@@ -13,7 +13,7 @@ interface NavigationButtonsProps {
 export const NavigationButtons = ({ 
   onNext, 
   onBack, 
-  nextLabel = "Continue →", 
+  nextLabel = "Continue", 
   nextDisabled = false,
   hideBack = false
 }: NavigationButtonsProps) => {
