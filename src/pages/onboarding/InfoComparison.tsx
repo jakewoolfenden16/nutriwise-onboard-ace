@@ -87,7 +87,7 @@ export default function InfoComparison() {
         </div>
       </div>
 
-      <NavigationButtons onNext={handleNext} nextLabel="Show me how →" />
+      <NavigationButtons onNext={handleNext} nextLabel="Show me how" />
     </OnboardingLayout>
   );
 }

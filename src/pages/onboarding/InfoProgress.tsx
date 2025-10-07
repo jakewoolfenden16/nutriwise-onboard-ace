@@ -55,7 +55,7 @@ export default function InfoProgress() {
         </div>
       </div>
 
-      <NavigationButtons onNext={handleNext} nextLabel="Let's do it →" />
+      <NavigationButtons onNext={handleNext} nextLabel="Let's do it" />
     </OnboardingLayout>
   );
 }

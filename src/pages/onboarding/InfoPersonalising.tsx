@@ -86,7 +86,7 @@ export default function InfoPersonalising() {
       {/* Delayed Continue Button */}
       {showButton && (
         <div className="animate-fade-in">
-          <NavigationButtons onNext={handleNext} nextLabel="Continue →" hideBack />
+          <NavigationButtons onNext={handleNext} nextLabel="Continue" hideBack />
         </div>
       )}
     </OnboardingLayout>
