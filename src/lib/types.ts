@@ -37,9 +37,31 @@ export interface CalculationResponse {
     };
   };
 }
+
 export interface SignupCredentials {
   email: string;
   password: string;
+  name: string;
+  questionnaire_data?: {
+    gender: string;
+    workoutFrequency: number;
+    height: number;
+    weight: number;
+    heightUnit: string;
+    weightUnit: string;
+    age: number;
+    overallGoal: string;
+    weightGoal: number;
+    weeklyWeightLoss: number;
+    specificDiet: string;
+    cuisinePreferences: string[];
+    otherNotes: string;
+    foodsToAvoid: string[];
+    motivation: string;
+    motivationOther: string;
+    mealPreferences: string[];
+    fasting: boolean;
+  };
 }
 
 export interface LoginCredentials {

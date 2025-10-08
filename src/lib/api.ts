@@ -64,7 +64,7 @@ export const calculateTargets = async (data: QuestionnaireData): Promise<Calcula
   }
 };
 
-export const generateMealPlan = async (data: QuestionnaireData) => {
+export const generateMealPlan = async () => {
   const token = localStorage.getItem('authToken');
   if (!token) {
     throw new Error('No auth token found. Please log in.');
@@ -72,7 +72,7 @@ export const generateMealPlan = async (data: QuestionnaireData) => {
 
   try {
     console.log('🌐 Making API request to:', `${API_BASE_URL}/plans/generate_meal_plan`);
-    console.log('📤 Request body:', JSON.stringify(data, null, 2));
+    console.log('📋 Meal plan will be generated from user metadata');
 
     const response = await fetch(`${API_BASE_URL}/plans/generate_meal_plan`, {
       method: 'POST',
@@ -80,7 +80,7 @@ export const generateMealPlan = async (data: QuestionnaireData) => {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
       },
-      body: JSON.stringify(data),
+      // No body needed - backend fetches from metadata
     });
 
     console.log('📥 Response status:', response.status, response.statusText);
@@ -120,7 +120,7 @@ export const generateMealPlan = async (data: QuestionnaireData) => {
     }
 
     const result = await response.json();
-    console.log('✅ Successful response:', result);
+    console.log('✅ Meal plan generated successfully:', result);
     return result;
   } catch (error) {
     console.error('❌ API call failed:', error);
@@ -128,10 +128,16 @@ export const generateMealPlan = async (data: QuestionnaireData) => {
   }
 };
 
+// Updated signup - now includes questionnaire_data
 export const signup = async (credentials: SignupCredentials): Promise<{ message: string }> => {
   try {
     console.log('🌐 Making signup request to:', `${API_BASE_URL}/signup`);
-    console.log('📤 Request body:', { email: credentials.email, password: '***' });
+    console.log('📤 Request includes:', { 
+      email: credentials.email, 
+      name: credentials.name,
+      password: '***',
+      has_questionnaire: !!credentials.questionnaire_data 
+    });
 
     const response = await fetch(`${API_BASE_URL}/signup`, {
       method: 'POST',
