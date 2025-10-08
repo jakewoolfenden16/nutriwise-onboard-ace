@@ -111,13 +111,18 @@ export default function LoadingStep() {
   useEffect(() => {
     if (error || mealPlan) return;
 
-    const totalDuration = loadingSteps[loadingSteps.length - 1].duration;
-    const updateInterval = 100; // Update every 100ms
+    const updateInterval = 200; // Update every 200ms
 
     const timer = setInterval(() => {
       setProgress((prev) => {
-        const newProgress = prev + (100 / (totalDuration / updateInterval));
-        return Math.min(newProgress, 95); // Cap at 95% until actual completion
+        // Exponential slowdown: the closer to 99.9%, the slower it moves
+        // At 0%: moves ~1% per update
+        // At 50%: moves ~0.5% per update  
+        // At 95%: moves ~0.05% per update
+        const remainingProgress = 99.9 - prev;
+        const increment = remainingProgress * 0.01; // 1% of remaining distance
+        
+        return Math.min(prev + increment, 99.9);
       });
     }, updateInterval);
 
@@ -194,6 +199,13 @@ export default function LoadingStep() {
           </div>
         </div>
 
+        {/* Patience Message */}
+        <div className="text-center">
+          <p className="text-sm text-muted-foreground">
+            This can take up to 3 minutes... 🥴
+        </p>
+      </div>
+
         {/* Loading Steps */}
         <div className="space-y-3">
           {loadingSteps.map((step, index) => {
@@ -229,7 +241,7 @@ export default function LoadingStep() {
         {/* Fun Facts */}
         <div className="bg-card rounded-xl p-4 border border-border">
           <p className="text-sm text-muted-foreground text-center">
-            💡 <span className="font-medium text-foreground">Did you know?</span> Your personalized plan considers over 50 factors including your goals, preferences, and lifestyle!
+            💡 <span className="font-medium text-foreground">Did you know?</span> Your personalized plan considers over 50 factors including your goals, food preferences, and how much you exercise!
           </p>
         </div>
       </div>
