@@ -18,12 +18,12 @@ const mapGoalToBackend = (goal: string): string => {
 };
 
 const loadingSteps = [
-  { label: 'Analyzing your profile...', duration: 2000 },
-  { label: 'Calculating nutrition targets...', duration: 3000 },
-  { label: 'Selecting recipes...', duration: 8000 },
-  { label: 'Customizing your meals...', duration: 10000 },
-  { label: 'Optimizing your plan...', duration: 15000 },
-  { label: 'Finalizing everything...', duration: 20000 },
+  { label: 'Analyzing your profile...', duration: 12000 },         // 12 seconds
+  { label: 'Calculating nutrition targets...', duration: 18000 },  // 18 seconds
+  { label: 'Selecting recipes...', duration: 48000 },             // 48 seconds
+  { label: 'Customizing your meals...', duration: 60000 },        // 60 seconds
+  { label: 'Optimizing your plan...', duration: 90000 },         // 90 seconds
+  { label: 'Finalizing everything...', duration: 120000 },       // 120 seconds
 ];
 
 export default function LoadingStep() {
