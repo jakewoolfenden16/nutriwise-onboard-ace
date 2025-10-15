@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Check } from 'lucide-react';
 
 const cuisines = ['Indian', 'Mediterranean', 'Asian', 'Japanese', 'Italian', 'Mexican'];
+const SHOW_CUISINE_BUTTONS = false; // TODO: Enable when backend is connected
 
 export default function CuisineStep() {
   const { data, updateData, setCurrentStep } = useOnboarding();
@@ -31,10 +32,11 @@ export default function CuisineStep() {
 
   return (
     <OnboardingLayout
-      title="Do you have cuisine preferences?"
-      subtitle="We'll focus on flavours you love."
+      title="What foods do you love?"
+      subtitle="In your own words, tell us about cuisines, ingredients, or dishes you enjoy."
     >
       <div className="space-y-6">
+      {SHOW_CUISINE_BUTTONS && (
         <div className="grid grid-cols-2 gap-3">
           {cuisines.map((cuisine) => (
             <Button
@@ -50,11 +52,8 @@ export default function CuisineStep() {
             </Button>
           ))}
         </div>
-
+      )}
         <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">
-            Any other notes for your AI dietitian?
-          </label>
           <Textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
