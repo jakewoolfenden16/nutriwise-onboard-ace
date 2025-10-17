@@ -27,7 +27,7 @@ export default function CuisineStep() {
   const handleNext = () => {
     updateData({ cuisinePreferences: selected, otherNotes: notes });
     setCurrentStep(13);
-    navigate('/onboarding/avoid');
+    navigate('/onboarding/account');
   };
 
   return (

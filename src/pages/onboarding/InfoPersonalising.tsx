@@ -59,7 +59,7 @@ export default function InfoPersonalising() {
 
   const handleNext = () => {
     setCurrentStep(16);
-    navigate('/onboarding/meals');
+    navigate('/onboarding/diet');
   };
 
   const loaderAnimated = !done && !prefersReducedMotion;

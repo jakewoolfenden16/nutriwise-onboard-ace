@@ -27,7 +27,7 @@ export default function WorkoutStep() {
     const option = workoutOptions.find(o => o.id === selected);
     updateData({ workoutFrequency: option?.value || 4 });
     setCurrentStep(3);
-    navigate('/onboarding/info-sustainable');
+    navigate('/onboarding/measurements');
   };
 
   return (
