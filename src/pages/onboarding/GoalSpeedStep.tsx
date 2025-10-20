@@ -35,7 +35,7 @@ export default function GoalSpeedStep() {
   const handleNext = () => {
     updateData({ weeklyWeightLoss: weeklyRate });
     setCurrentStep(10);
-    navigate('/onboarding/info-comparison');
+    navigate('/onboarding/info-personalising');
   };
 
   // Determine which icon to highlight based on rate
