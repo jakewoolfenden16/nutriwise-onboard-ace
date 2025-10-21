@@ -7,12 +7,12 @@ import { generateMealPlan } from '@/lib/api';
 import { Sparkles, CheckCircle2, Loader2, Mail } from 'lucide-react';
 
 const loadingSteps = [
-  { label: 'Analyzing your profile...', duration: 2000 },
-  { label: 'Calculating nutrition targets...', duration: 3000 },
-  { label: 'Selecting recipes...', duration: 8000 },
-  { label: 'Customizing your meals...', duration: 10000 },
-  { label: 'Optimizing your plan...', duration: 15000 },
-  { label: 'Finalizing everything...', duration: 20000 },
+  { label: 'Analyzing your profile...', duration: 12000 },         // 12 seconds
+  { label: 'Calculating nutrition targets...', duration: 18000 },  // 18 seconds
+  { label: 'Selecting recipes...', duration: 48000 },             // 48 seconds
+  { label: 'Customizing your meals...', duration: 60000 },        // 60 seconds
+  { label: 'Optimizing your plan...', duration: 90000 },         // 90 seconds
+  { label: 'Finalizing everything...', duration: 120000 },       // 120 seconds
 ];
 
 export default function LoadingStep() {
@@ -144,13 +144,18 @@ export default function LoadingStep() {
   useEffect(() => {
     if (error || mealPlan || verificationStatus !== 'verified') return;
 
-    const totalDuration = loadingSteps[loadingSteps.length - 1].duration;
-    const updateInterval = 100;
+    const updateInterval = 200; // Update every 200ms
 
     const timer = setInterval(() => {
       setProgress((prev) => {
-        const newProgress = prev + (100 / (totalDuration / updateInterval));
-        return Math.min(newProgress, 95);
+        // Exponential slowdown: the closer to 99.9%, the slower it moves
+        // At 0%: moves ~1% per update
+        // At 50%: moves ~0.5% per update  
+        // At 95%: moves ~0.05% per update
+        const remainingProgress = 99.9 - prev;
+        const increment = remainingProgress * 0.01; // 1% of remaining distance
+        
+        return Math.min(prev + increment, 99.9);
       });
     }, updateInterval);
 
@@ -300,6 +305,13 @@ export default function LoadingStep() {
           </div>
         </div>
 
+        {/* Patience Message */}
+        <div className="text-center">
+          <p className="text-sm text-muted-foreground">
+            This can take up to 3 minutes... 🥴
+        </p>
+      </div>
+
         {/* Loading Steps */}
         <div className="space-y-3">
           {loadingSteps.map((step, index) => {
@@ -335,7 +347,7 @@ export default function LoadingStep() {
         {/* Fun Facts */}
         <div className="bg-card rounded-xl p-4 border border-border">
           <p className="text-sm text-muted-foreground text-center">
-            💡 <span className="font-medium text-foreground">Did you know?</span> Your personalized plan considers over 50 factors including your goals, preferences, and lifestyle!
+            💡 <span className="font-medium text-foreground">Did you know?</span> Your personalized plan considers over 50 factors including your goals, food preferences, and how much you exercise!
           </p>
         </div>
       </div>

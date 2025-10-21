@@ -16,20 +16,17 @@ import RecipeDetailPage from "./pages/RecipeDetailPage";
 // Onboarding pages
 import GenderStep from "./pages/onboarding/GenderStep";
 import WorkoutStep from "./pages/onboarding/WorkoutStep";
-import InfoSustainable from "./pages/onboarding/InfoSustainable";
 import MeasurementsStep from "./pages/onboarding/MeasurementsStep";
 import AgeStep from "./pages/onboarding/AgeStep";
 import WeightGoalStep from "./pages/onboarding/WeightGoalStep";
-import OverallGoalStep from "./pages/onboarding/OverallGoalStep";
+import InfoPersonalising from "./pages/onboarding/InfoPersonalising";
 import InfoProgress from "./pages/onboarding/InfoProgress";
 import GoalSpeedStep from "./pages/onboarding/GoalSpeedStep";
-import InfoComparison from "./pages/onboarding/InfoComparison";
 import DietStep from "./pages/onboarding/DietStep";
 import CuisineStep from "./pages/onboarding/CuisineStep";
 import AvoidStep from "./pages/onboarding/AvoidStep";
-import MotivationStep from "./pages/onboarding/MotivationStep";
-import InfoPersonalising from "./pages/onboarding/InfoPersonalising";
 import MealPreferencesStep from "./pages/onboarding/MealPreferencesStep";
+
 import FastingStep from "./pages/onboarding/FastingStep";
 import ResultsStep from "./pages/onboarding/ResultsStep";
 import AccountStep from "./pages/onboarding/AccountStep";
@@ -53,21 +50,23 @@ const App = () => (
                 {/* Onboarding Flow */}
                 <Route path="/onboarding/gender" element={<GenderStep />} />
                 <Route path="/onboarding/workout" element={<WorkoutStep />} />
-                <Route path="/onboarding/info-sustainable" element={<InfoSustainable />} />
+                {/* DELETED: Page 3 - InfoSustainable (marketing) */}
                 <Route path="/onboarding/measurements" element={<MeasurementsStep />} />
                 <Route path="/onboarding/age" element={<AgeStep />} />
                 <Route path="/onboarding/weight-goal" element={<WeightGoalStep />} />
-                <Route path="/onboarding/overall-goal" element={<OverallGoalStep />} />
+                {/* DELETED: Page 6 - OverallGoalStep (not needed) */}
+                <Route path="/onboarding/info-personalising" element={<InfoPersonalising />} />
                 <Route path="/onboarding/info-progress" element={<InfoProgress />} />
                 <Route path="/onboarding/goal-speed" element={<GoalSpeedStep />} />
-                <Route path="/onboarding/info-comparison" element={<InfoComparison />} />
+                {/* DELETED: Page 10 - InfoComparison (marketing) */}
                 <Route path="/onboarding/diet" element={<DietStep />} />
                 <Route path="/onboarding/cuisine" element={<CuisineStep />} />
-                <Route path="/onboarding/avoid" element={<AvoidStep />} />
-                <Route path="/onboarding/motivation" element={<MotivationStep />} />
-                <Route path="/onboarding/info-personalising" element={<InfoPersonalising />} />
-                <Route path="/onboarding/meals" element={<MealPreferencesStep />} />
-                <Route path="/onboarding/fasting" element={<FastingStep />} />
+                {/* COMMENTED OUT: Page 13 - AvoidStep (not connected to backend yet) */}
+                {/* <Route path="/onboarding/avoid" element={<AvoidStep />} /> */}
+                {/* DELETED: Page 14 - MotivationStep (not needed) */}
+                {/* COMMENTED OUT: Page 15 - MealPreferencesStep (not connected to backend yet) */}
+                {/* <Route path="/onboarding/meals" element={<MealPreferencesStep />} /> */}
+                {/* DELETED: Page 16 - FastingStep (not needed) */}
                 <Route path="/onboarding/account" element={<AccountStep />} />
                 <Route path="/onboarding/results" element={<ResultsStep />} />
                 <Route path="/onboarding/payment" element={<PaymentStep />} />

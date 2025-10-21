@@ -265,7 +265,7 @@ export default function ResultsStep() {
     return (
       <OnboardingLayout
         title="Calculating your personalized plan..."
-        subtitle="This will only take a moment"
+        subtitle="This will only take a moment (when we say a moment, we might mean 2 minutes, but it will be worth the wait!)"
         hideProgress
       >
         <div className="flex flex-col items-center justify-center py-12 space-y-4">
@@ -399,7 +399,7 @@ export default function ResultsStep() {
 
         <NavigationButtons
           onNext={handleNext}
-          nextLabel="See your meal plan →"
+          nextLabel="See your meal plan"
           hideBack
         />
       </OnboardingLayout>
