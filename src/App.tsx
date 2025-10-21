@@ -31,11 +31,9 @@ import MotivationStep from "./pages/onboarding/MotivationStep";
 import InfoPersonalising from "./pages/onboarding/InfoPersonalising";
 import MealPreferencesStep from "./pages/onboarding/MealPreferencesStep";
 import FastingStep from "./pages/onboarding/FastingStep";
-import LoadingStep from "./pages/onboarding/LoadingStep";
 import ResultsStep from "./pages/onboarding/ResultsStep";
 import AccountStep from "./pages/onboarding/AccountStep";
 import PaymentStep from "./pages/onboarding/PaymentStep";
-import MealPlanView from "./pages/onboarding/MealPlanView"
 
 const queryClient = new QueryClient();
 
@@ -71,9 +69,7 @@ const App = () => (
                 <Route path="/onboarding/meals" element={<MealPreferencesStep />} />
                 <Route path="/onboarding/fasting" element={<FastingStep />} />
                 <Route path="/onboarding/account" element={<AccountStep />} />
-                <Route path="/onboarding/loading" element={<LoadingStep />} />
                 <Route path="/onboarding/results" element={<ResultsStep />} />
-                <Route path="/onboarding/meal-plan-view" element={<MealPlanView />} />
                 <Route path="/onboarding/payment" element={<PaymentStep />} />
                 <Route path="/recipe-homepage" element={<RecipeHomepage />} />
                 <Route path="/recipe" element={<RecipeHomepage />} />

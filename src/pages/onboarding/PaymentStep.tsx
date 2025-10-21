@@ -1,20 +1,53 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Check, Clock, Lock, X } from 'lucide-react';
+import { Check, Clock, Lock, X, Loader2 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
+import { generateWeeklyPlan } from '@/lib/api';
 
 export default function PaymentStep() {
   const navigate = useNavigate();
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handlePurchase = () => {
-    toast({
-      title: "Payment Successful! 🎉",
-      description: "Redirecting to your meal plan...",
-    });
-    
-    setTimeout(() => {
-      navigate('/recipe-homepage');
-    }, 2000);
+  const handlePurchase = async () => {
+    try {
+      setIsGenerating(true);
+      setError(null);
+
+      console.log('💳 Processing "payment"...');
+
+      // Simulate payment processing
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      console.log('✅ Payment successful, generating weekly plan...');
+
+      // Generate the 7-day meal plan
+      const result = await generateWeeklyPlan();
+
+      console.log('✅ Weekly plan generated:', result);
+
+      toast({
+        title: "Payment Successful! 🎉",
+        description: "Your 7-day meal plan is ready!",
+      });
+
+      // Navigate to recipe homepage after short delay
+      setTimeout(() => {
+        navigate('/recipe-homepage');
+      }, 1500);
+
+    } catch (err) {
+      console.error('❌ Failed to generate meal plan:', err);
+      setError(err instanceof Error ? err.message : 'Failed to generate meal plan');
+      setIsGenerating(false);
+
+      toast({
+        title: "Error",
+        description: "Failed to generate your meal plan. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -63,13 +96,28 @@ export default function PaymentStep() {
           </div>
         </div>
 
+        {/* Error Message */}
+        {error && (
+          <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4 text-center mb-6">
+            <p className="text-sm text-destructive">{error}</p>
+          </div>
+        )}
+
         {/* CTA Button */}
-        <a
-          href="https://buy.stripe.com/5kQdRacbWg4RgdNd1McV200"
-          className="w-full inline-flex items-center justify-center h-14 text-lg font-semibold rounded-md bg-primary text-primary-foreground hover:opacity-90 transition mb-6"
+        <button
+          onClick={handlePurchase}
+          disabled={isGenerating}
+          className="w-full inline-flex items-center justify-center h-14 text-lg font-semibold rounded-md bg-primary text-primary-foreground hover:opacity-90 transition mb-6 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Get My Plan for £1.99 →
-        </a>
+          {isGenerating ? (
+            <>
+              <Loader2 className="h-5 w-5 animate-spin mr-2" />
+              Generating your meal plan...
+            </>
+          ) : (
+            'Get My Plan for £1.99 →'
+          )}
+        </button>
 
         {/* Trust Anchors */}
         <div className="flex items-center justify-center gap-6 mb-6 text-sm text-muted-foreground flex-wrap">
@@ -91,6 +139,16 @@ export default function PaymentStep() {
         <p className="text-center text-sm text-muted-foreground leading-relaxed">
           You&apos;ll get your 1-day high-protein plan instantly. If it&apos;s not for you, just drop us a message and we&apos;ll refund you.
         </p>
+
+        {/* DEV MODE: Test button to skip to recipe homepage */}
+        {import.meta.env.DEV && (
+          <button
+            onClick={() => navigate('/recipe-homepage')}
+            className="w-full mt-4 px-4 py-2 bg-purple-600 text-white rounded-lg text-sm hover:bg-purple-700"
+          >
+            🔧 DEV: Skip to Recipe Homepage
+          </button>
+        )}
       </div>
     </div>
   );

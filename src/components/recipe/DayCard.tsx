@@ -43,8 +43,8 @@ export const DayCard = ({ plan, isToday }: DayCardProps) => {
   const dayColorClass = dayColors[(plan.day - 1) % 7];
 
   return (
-    <div 
-      onClick={() => navigate(`/day/${plan.day}`)}
+    <div
+      onClick={() => navigate(`/day/${plan.dailyPlanId || plan.day}`)}
       className={`relative bg-card rounded-xl shadow-sm border transition-all duration-300 overflow-hidden cursor-pointer hover:shadow-lg ${
         isToday ? 'border-primary' : 'border-border'
       }`}
