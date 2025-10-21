@@ -17,6 +17,7 @@ export interface Meal {
 
 export interface MealPlan {
   day: number;
+  dailyPlanId?: number; // Optional for backward compatibility
   date: string;
   dayName: string;
   calories: number;

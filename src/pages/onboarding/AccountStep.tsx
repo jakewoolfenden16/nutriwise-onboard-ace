@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { OnboardingLayout } from '@/components/onboarding/OnboardingLayout';
 import { NavigationButtons } from '@/components/onboarding/NavigationButtons';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { useAuth } from '@/contexts/AuthContext';
-import { Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
+import { createProfile } from '@/lib/api';
+import { Mail, Lock, User, Eye, EyeOff, Loader2 } from 'lucide-react';
 
 export default function AccountStep() {
   const [email, setEmail] = useState('');
@@ -14,11 +15,77 @@ export default function AccountStep() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [isVerifying, setIsVerifying] = useState(true);
 
   // Make sure to get 'data' from the context
   const { data, updateData } = useOnboarding();
   const { signup } = useAuth();
   const navigate = useNavigate();
+
+  // Check if user is returning from email verification
+  useEffect(() => {
+    const handleEmailVerification = async () => {
+      console.log('🔍 Checking for email verification...');
+
+      // Check URL for Supabase auth tokens
+      const hashParams = new URLSearchParams(window.location.hash.substring(1));
+      const accessToken = hashParams.get('access_token');
+      const refreshToken = hashParams.get('refresh_token');
+      const type = hashParams.get('type');
+
+      if (type === 'signup' && accessToken) {
+        console.log('✅ Email verification detected!');
+
+        try {
+          // Store tokens
+          localStorage.setItem('authToken', accessToken);
+          if (refreshToken) {
+            localStorage.setItem('refreshToken', refreshToken);
+          }
+
+          // Clean up URL
+          window.history.replaceState({}, document.title, window.location.pathname);
+
+          // Get questionnaire data from localStorage (saved during signup)
+          const pendingQuestionnaire = localStorage.getItem('pendingQuestionnaire');
+
+          if (pendingQuestionnaire) {
+            const questionnaireData = JSON.parse(pendingQuestionnaire);
+
+            // Create profile with the data
+            console.log('📝 Creating profile with questionnaire data...');
+            await createProfile({
+              gender: questionnaireData.gender as 'male' | 'female',
+              height: questionnaireData.height,
+              weight: questionnaireData.weight,
+              age: questionnaireData.age,
+              workouts_per_week: questionnaireData.workoutFrequency,
+              goal: questionnaireData.overallGoal,
+              weight_goal: questionnaireData.weightGoal,
+              planned_weekly_weight_loss: questionnaireData.weeklyWeightLoss || 0.5,
+            });
+
+            console.log('✅ Profile created successfully!');
+
+            // Clean up localStorage
+            localStorage.removeItem('pendingQuestionnaire');
+          }
+
+          // Navigate to payment page
+          console.log('➡️ Navigating to payment page');
+          navigate('/onboarding/payment');
+
+        } catch (err) {
+          console.error('❌ Failed to process verification:', err);
+          setError('Failed to complete verification. Please try again.');
+        }
+      }
+
+      setIsVerifying(false);
+    };
+
+    handleEmailVerification();
+  }, [navigate]);
 
   const handleSubmit = async () => {
     console.log('🚀 Starting signup process');
@@ -123,6 +190,22 @@ export default function AccountStep() {
     // Navigate to separate login page
     navigate('/login');
   };
+
+  // Show verification loading screen
+  if (isVerifying && window.location.hash.includes('access_token')) {
+    return (
+      <OnboardingLayout
+        title="Verifying your email"
+        subtitle="Please wait while we set up your account..."
+        hideProgress
+      >
+        <div className="flex flex-col items-center justify-center py-12">
+          <Loader2 className="h-12 w-12 text-primary animate-spin mb-4" />
+          <p className="text-sm text-muted-foreground">Creating your profile...</p>
+        </div>
+      </OnboardingLayout>
+    );
+  }
 
   return (
     <OnboardingLayout

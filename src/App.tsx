@@ -26,11 +26,11 @@ import DietStep from "./pages/onboarding/DietStep";
 import CuisineStep from "./pages/onboarding/CuisineStep";
 import AvoidStep from "./pages/onboarding/AvoidStep";
 import MealPreferencesStep from "./pages/onboarding/MealPreferencesStep";
-import LoadingStep from "./pages/onboarding/LoadingStep";
+
+import FastingStep from "./pages/onboarding/FastingStep";
 import ResultsStep from "./pages/onboarding/ResultsStep";
 import AccountStep from "./pages/onboarding/AccountStep";
 import PaymentStep from "./pages/onboarding/PaymentStep";
-import MealPlanView from "./pages/onboarding/MealPlanView"
 
 const queryClient = new QueryClient();
 
@@ -68,9 +68,7 @@ const App = () => (
                 {/* <Route path="/onboarding/meals" element={<MealPreferencesStep />} /> */}
                 {/* DELETED: Page 16 - FastingStep (not needed) */}
                 <Route path="/onboarding/account" element={<AccountStep />} />
-                <Route path="/onboarding/loading" element={<LoadingStep />} />
                 <Route path="/onboarding/results" element={<ResultsStep />} />
-                <Route path="/onboarding/meal-plan-view" element={<MealPlanView />} />
                 <Route path="/onboarding/payment" element={<PaymentStep />} />
                 <Route path="/recipe-homepage" element={<RecipeHomepage />} />
                 <Route path="/recipe" element={<RecipeHomepage />} />
