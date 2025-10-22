@@ -28,7 +28,16 @@ export default function WeightGoalStep() {
   }
 
   const handleNext = () => {
-    updateData({ weightGoal: goalWeight });
+    let goal: 'lose' | 'maintain' | 'build';
+    if (goalWeight < currentWeight) {
+      goal = 'lose';
+    } else if (goalWeight === currentWeight) {
+      goal = 'maintain';
+    } else {
+      goal = 'build';
+    }
+
+    updateData({ weightGoal: goalWeight, goal });
     setCurrentStep(8);
     navigate('/onboarding/info-progress');
   };
