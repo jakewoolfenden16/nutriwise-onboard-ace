@@ -10,7 +10,8 @@ export interface OnboardingData {
   weightUnit?: 'kg' | 'lbs';
   age?: number;
   weightGoal?: number;
-  overallGoal?: string;
+  goal?: 'lose' | 'maintain' | 'build'; // Automatically set based on weight comparison
+  overallGoal?: string; // Legacy, keeping for backwards compatibility
   goalSpeed?: number; // Legacy, keeping for backwards compatibility
   weeklyWeightLoss?: number; // New: kg per week (0.1 - 1.5)
   specificDiet?: string;

@@ -60,7 +60,7 @@ export default function AccountStep() {
               weight: questionnaireData.weight,
               age: questionnaireData.age,
               workouts_per_week: questionnaireData.workoutFrequency,
-              goal: questionnaireData.overallGoal,
+              goal: questionnaireData.goal as 'lose' | 'maintain' | 'build',
               weight_goal: questionnaireData.weightGoal,
               planned_weekly_weight_loss: questionnaireData.weeklyWeightLoss || 0.5,
             });
@@ -124,7 +124,8 @@ export default function AccountStep() {
         heightUnit: data.heightUnit,
         weightUnit: data.weightUnit,
         age: data.age,
-        overallGoal: data.overallGoal,
+        goal: data.goal, // Automatically set based on weight comparison
+        overallGoal: data.overallGoal, // Legacy field
         weightGoal: data.weightGoal,
         weeklyWeightLoss: data.weeklyWeightLoss,
         specificDiet: data.specificDiet,
