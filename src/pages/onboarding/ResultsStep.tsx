@@ -254,10 +254,10 @@ export default function ResultsStep() {
   }, [calculationData, isLoading]);
 
   const handleNext = () => {
-    console.log('➡️ Navigating to account step');
+    console.log('➡️ Navigating to diet step');
     console.log('💾 Calculated targets stored:', calculationData);
-    setCurrentStep(20);
-    navigate('/onboarding/account');
+    setCurrentStep(17);
+    navigate('/onboarding/diet');
   };
 
   // Show loading state
