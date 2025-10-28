@@ -19,7 +19,6 @@ import WorkoutStep from "./pages/onboarding/WorkoutStep";
 import MeasurementsStep from "./pages/onboarding/MeasurementsStep";
 import AgeStep from "./pages/onboarding/AgeStep";
 import WeightGoalStep from "./pages/onboarding/WeightGoalStep";
-import InfoPersonalising from "./pages/onboarding/InfoPersonalising";
 import InfoProgress from "./pages/onboarding/InfoProgress";
 import GoalSpeedStep from "./pages/onboarding/GoalSpeedStep";
 import DietStep from "./pages/onboarding/DietStep";
@@ -55,7 +54,6 @@ const App = () => (
                 <Route path="/onboarding/age" element={<AgeStep />} />
                 <Route path="/onboarding/weight-goal" element={<WeightGoalStep />} />
                 {/* DELETED: Page 6 - OverallGoalStep (not needed) */}
-                <Route path="/onboarding/info-personalising" element={<InfoPersonalising />} />
                 <Route path="/onboarding/info-progress" element={<InfoProgress />} />
                 <Route path="/onboarding/goal-speed" element={<GoalSpeedStep />} />
                 {/* DELETED: Page 10 - InfoComparison (marketing) */}

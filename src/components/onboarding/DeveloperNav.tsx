@@ -23,6 +23,7 @@ const steps = [
   { num: 13, name: 'Account Creation', path: '/onboarding/account' },
   { num: 14, name: 'Payment', path: '/onboarding/payment' },
   { num: 15, name: 'Recipe Homepage', path: '/recipe-homepage' },
+  { num: 16, name: 'Results Step', path: '/onboarding/results' },
 ];
 
 export const DeveloperNav = () => {
