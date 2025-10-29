@@ -1,5 +1,5 @@
 import { createContext, useContext, ReactNode, useState, useEffect } from 'react';
-import { getWeeklyPlanCurrent, getWeeklyPlan } from '@/lib/api';
+import { getWeeklyPlanCurrent, getWeeklyPlan, generateWeeklyPlan } from '@/lib/api';
 import type { DailyPlanOverview } from '@/lib/types';
 
 export interface Meal {
@@ -193,12 +193,27 @@ export const RecipeProvider = ({ children }: { children: ReactNode }) => {
       try {
         console.log('🔄 RecipeContext: Fetching weekly plan data...');
 
-        // First get the current weekly plan ID
-        const currentPlan = await getWeeklyPlanCurrent();
-        console.log('✅ RecipeContext: Current weekly plan ID:', currentPlan.weekly_plan_id);
+        let currentPlanId: number;
+
+        try {
+          // First try to get the current weekly plan ID
+          const currentPlan = await getWeeklyPlanCurrent();
+          currentPlanId = currentPlan.weekly_plan_id;
+          console.log('✅ RecipeContext: Current weekly plan ID:', currentPlanId);
+        } catch (error: any) {
+          // If no weekly plan exists (404 error), generate one
+          if (error.message?.includes('No active weekly plan')) {
+            console.log('📝 RecipeContext: No weekly plan found, generating one...');
+            const newPlan = await generateWeeklyPlan();
+            currentPlanId = newPlan.weekly_plan_id;
+            console.log('✅ RecipeContext: Weekly plan generated with ID:', currentPlanId);
+          } else {
+            throw error;
+          }
+        }
 
         // Then fetch the full weekly plan with all daily plans
-        const weeklyPlan = await getWeeklyPlan(currentPlan.weekly_plan_id);
+        const weeklyPlan = await getWeeklyPlan(currentPlanId);
         console.log('✅ RecipeContext: Weekly plan fetched:', weeklyPlan);
 
         // Transform API data to MealPlan format
