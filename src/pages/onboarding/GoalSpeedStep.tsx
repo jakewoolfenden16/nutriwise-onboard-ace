@@ -49,7 +49,7 @@ export default function GoalSpeedStep() {
   return (
     <OnboardingLayout
       title="How fast would you like to achieve your goal?"
-      subtitle="We'll help you find a healthy pace."
+      subtitle="Use our recommendation for a healthy pace"
     >
       <div className="bg-card rounded-2xl p-6 shadow-md border border-border space-y-6">
         {/* Animal Icons */}
@@ -95,11 +95,12 @@ export default function GoalSpeedStep() {
 
         {/* Recommend Button */}
         <Button
-          variant="outline"
+          variant="default"
+          size="lg"
           onClick={handleRecommend}
-          className="w-full"
+          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-lg py-6"
         >
-          <Sparkles className="mr-2 h-4 w-4" />
+          <Sparkles className="mr-2 h-6 w-6" />
           Recommend a healthy pace
         </Button>
 

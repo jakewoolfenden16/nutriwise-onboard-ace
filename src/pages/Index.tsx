@@ -19,12 +19,10 @@ const Index = () => {
           {/* Headline */}
           <div className="space-y-6 animate-fade-in">
             <h1 className="text-5xl md:text-7xl font-extrabold text-foreground leading-tight tracking-tight">
-              Hit Your Protein Targets.
-              <br />
-              <span className="text-primary">Build Lean Muscle.</span>
+              Meal Plans That Match Your Macros
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto font-medium">
-              Custom meal plans for gym-goers who take training seriously. No fluff. No guesswork. Just meals that match your macros.
+              Tell us about you and your goals. We'll build you a week of meals that hit your macros.
             </p>
           </div>
 
@@ -35,12 +33,9 @@ const Index = () => {
             onClick={() => navigate('/onboarding/gender')}
             className="h-16 px-12 text-lg font-bold shadow-xl hover:shadow-2xl transition-all"
           >
-            Get My Plan — £1.99 One-Time
+            Build my plan in 2 minutes
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
-          <p className="text-sm text-muted-foreground mt-4 font-medium">
-            Takes 2 minutes · One-time payment · No subscription
-          </p>
           </div>
         </div>
       </div>
@@ -50,25 +45,25 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="max-w-5xl mx-auto">
             <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-foreground">
-              Nutrition that actually fuels your training.
+              Here's how it works:
             </h2>
-            
+
             <div className="grid md:grid-cols-3 gap-6">
               {[
                 {
                   icon: Target,
-                  title: 'Macro-Accurate Plans',
-                  description: 'Dial in your protein, carbs, and fats for your goal, whether that\'s cutting, bulking, or maintenance.',
+                  title: 'We Calculate Your Macros',
+                  description: 'Not sure how much protein, carbs, or fat you need? We work it out based on your health stats, goals, and training frequency.',
                 },
                 {
                   icon: UtensilsCrossed,
-                  title: 'Serious Food, Simple Prep',
-                  description: 'Meals designed for strength. Quick to make, easy to track.',
+                  title: 'Real Recipes from Professional Chefs',
+                  description: 'No bland, generic meals. Every meal in your plan comes from our database of recipes created by actual chefs - so the food is epic.',
                 },
                 {
                   icon: Brain,
-                  title: 'AI + Science Backed',
-                  description: 'Built on sports nutrition research and real-world data from gym-goers.',
+                  title: 'We Fixed AI Meal Planning',
+                  description: 'Most AI meal planners hallucinate recipes or botch your macros. We don\'t.',
                 },
               ].map((feature, i) => (
                 <div
@@ -92,10 +87,10 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center space-y-6">
             <h3 className="text-4xl md:text-5xl font-bold text-background">
-              Stop guessing. Start growing.
+              You'll get a full 7-day plan.
             </h3>
             <p className="text-xl text-background/80 font-medium">
-              Get your high-protein plan today — tailored to your workouts.
+              Every meal mapped out. Every macro calculated. Just follow it.
             </p>
             <Button
               size="lg"
@@ -103,7 +98,7 @@ const Index = () => {
               onClick={() => navigate('/onboarding/gender')}
               className="h-16 px-12 text-lg font-bold mt-6 bg-background text-foreground border-2 border-background hover:bg-background/90"
             >
-              Get My Plan — £1.99 One-Time
+              Get started
             </Button>
           </div>
         </div>

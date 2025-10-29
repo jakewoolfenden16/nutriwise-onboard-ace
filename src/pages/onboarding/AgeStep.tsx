@@ -19,7 +19,6 @@ export default function AgeStep() {
   return (
     <OnboardingLayout
       title="How old are you?"
-      subtitle="This helps us calculate your nutritional needs."
     >
       <div className="bg-card rounded-2xl p-8 shadow-md border border-border">
         <p className="text-center text-sm text-muted-foreground mb-4">Age</p>
