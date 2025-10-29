@@ -1,4 +1,6 @@
-import { createContext, useContext, ReactNode, useState } from 'react';
+import { createContext, useContext, ReactNode, useState, useEffect } from 'react';
+import { getWeeklyPlanCurrent, getWeeklyPlan } from '@/lib/api';
+import type { DailyPlanOverview } from '@/lib/types';
 
 export interface Meal {
   id: string;
@@ -182,6 +184,55 @@ const RecipeContext = createContext<RecipeContextType | undefined>(undefined);
 
 export const RecipeProvider = ({ children }: { children: ReactNode }) => {
   const [eatenMeals, setEatenMeals] = useState<Set<string>>(new Set());
+  const [mealPlans, setMealPlans] = useState<MealPlan[]>(mockMealPlans);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch real weekly plan data on mount
+  useEffect(() => {
+    const fetchWeeklyPlan = async () => {
+      try {
+        console.log('🔄 RecipeContext: Fetching weekly plan data...');
+
+        // First get the current weekly plan ID
+        const currentPlan = await getWeeklyPlanCurrent();
+        console.log('✅ RecipeContext: Current weekly plan ID:', currentPlan.weekly_plan_id);
+
+        // Then fetch the full weekly plan with all daily plans
+        const weeklyPlan = await getWeeklyPlan(currentPlan.weekly_plan_id);
+        console.log('✅ RecipeContext: Weekly plan fetched:', weeklyPlan);
+
+        // Transform API data to MealPlan format
+        const transformedPlans: MealPlan[] = weeklyPlan.daily_plans.map((dailyPlan: DailyPlanOverview) => ({
+          day: dailyPlan.day_of_week,
+          dailyPlanId: dailyPlan.id, // THIS IS THE KEY FIX!
+          date: new Date(dailyPlan.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }),
+          dayName: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'][dailyPlan.day_of_week - 1],
+          calories: dailyPlan.total_calories,
+          macros: {
+            protein: dailyPlan.total_protein,
+            carbs: dailyPlan.total_carbs,
+            fat: dailyPlan.total_fat
+          },
+          meals: {
+            breakfast: [],
+            lunch: [],
+            dinner: [],
+            snacks: []
+          }
+        }));
+
+        setMealPlans(transformedPlans);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('❌ RecipeContext: Failed to fetch weekly plan:', error);
+        // Keep using mock data if API fails
+        console.log('⚠️ RecipeContext: Falling back to mock data');
+        setIsLoading(false);
+      }
+    };
+
+    fetchWeeklyPlan();
+  }, []);
 
   const markMealAsEaten = (mealId: string) => {
     setEatenMeals(prev => new Set([...prev, mealId]));
@@ -196,7 +247,7 @@ export const RecipeProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const value = {
-    mealPlans: mockMealPlans,
+    mealPlans,
     currentDay: 1,
     healthScore: 95,
     userName: undefined,
