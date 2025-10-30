@@ -79,6 +79,8 @@ const mapGoalToBackend = (goal: string): string => {
 };
 
 export default function ResultsStep() {
+  console.log('🎬 ResultsStep - COMPONENT RENDERING');
+
   const [showConfetti, setShowConfetti] = useState(false);
   const [animatedCalories, setAnimatedCalories] = useState(0);
   const [animatedProtein, setAnimatedProtein] = useState(0);
@@ -112,7 +114,7 @@ export default function ResultsStep() {
   const headline = generateHeadline(data, difference);
   const contextualTips = generateContextualTips(data);
 
-  // Fetch calculation targets when component mounts
+  // Fetch calculation targets when component mounts or when data changes
   useEffect(() => {
     const fetchTargets = async () => {
       console.log('🚀 useEffect - Calculating targets on component mount');
@@ -213,7 +215,7 @@ export default function ResultsStep() {
     };
 
     fetchTargets();
-  }, []);
+  }, [data.gender, data.height, data.weight, data.age, data.workoutFrequency, data.overallGoal, data.specificDiet, data.weeklyWeightLoss, data.weightGoal]);
 
   // Animation effect - trigger after data is loaded
   useEffect(() => {
