@@ -187,9 +187,18 @@ export const RecipeProvider = ({ children }: { children: ReactNode }) => {
   const [mealPlans, setMealPlans] = useState<MealPlan[]>(mockMealPlans);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch real weekly plan data on mount
+  // Fetch real weekly plan data on mount - ONLY if authenticated
   useEffect(() => {
     const fetchWeeklyPlan = async () => {
+      // Check if user is authenticated before fetching
+      const token = localStorage.getItem('authToken');
+
+      if (!token) {
+        console.log('⏭️ RecipeContext: No auth token found, skipping weekly plan fetch');
+        setIsLoading(false);
+        return;
+      }
+
       try {
         console.log('🔄 RecipeContext: Fetching weekly plan data...');
 
