@@ -265,7 +265,7 @@ export default function ResultsStep() {
     return (
       <OnboardingLayout
         title="Calculating your personalised plan..."
-        subtitle="This will only take a moment (this can take up to 2 minutes)"
+        subtitle="This can take up to 2 minutes"
         hideProgress
       >
         <div className="flex flex-col items-center justify-center py-12 space-y-4">
