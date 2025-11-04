@@ -19,7 +19,7 @@ export default function AccountStep() {
 
   // Make sure to get 'data' from the context
   const { data, updateData } = useOnboarding();
-  const { signup } = useAuth();
+  const { signup, refreshTokenFromStorage } = useAuth();
   const navigate = useNavigate();
 
   // Check if user is returning from email verification
@@ -42,6 +42,9 @@ export default function AccountStep() {
           if (refreshToken) {
             localStorage.setItem('refreshToken', refreshToken);
           }
+
+          // Sync auth context with the new token
+          refreshTokenFromStorage();
 
           // Clean up URL
           window.history.replaceState({}, document.title, window.location.pathname);
@@ -85,7 +88,7 @@ export default function AccountStep() {
     };
 
     handleEmailVerification();
-  }, [navigate]);
+  }, [navigate, refreshTokenFromStorage]);
 
   const handleSubmit = async () => {
     console.log('🚀 Starting signup process');
