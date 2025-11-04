@@ -1,6 +1,7 @@
-import { createContext, useContext, ReactNode, useState, useEffect } from 'react';
+import { createContext, useContext, ReactNode, useState, useEffect, useCallback, useRef } from 'react';
 import { getWeeklyPlanCurrent, getWeeklyPlan, generateWeeklyPlan } from '@/lib/api';
 import type { DailyPlanOverview } from '@/lib/types';
+import { useAuth } from '@/contexts/AuthContext';
 
 export interface Meal {
   id: string;
@@ -178,6 +179,7 @@ interface RecipeContextType {
   eatenMeals: Set<string>;
   markMealAsEaten: (mealId: string) => void;
   unmarkMealAsEaten: (mealId: string) => void;
+  refreshWeeklyPlan: () => Promise<void>;
 }
 
 const RecipeContext = createContext<RecipeContextType | undefined>(undefined);
@@ -185,78 +187,95 @@ const RecipeContext = createContext<RecipeContextType | undefined>(undefined);
 export const RecipeProvider = ({ children }: { children: ReactNode }) => {
   const [eatenMeals, setEatenMeals] = useState<Set<string>>(new Set());
   const [mealPlans, setMealPlans] = useState<MealPlan[]>(mockMealPlans);
-  const [isLoading, setIsLoading] = useState(true);
+  const [, setIsLoading] = useState(true);
+  const { token } = useAuth();
+  const isMountedRef = useRef(true);
+  const isTestMode = import.meta.env.VITE_TEST_MODE === 'true';
 
-  // Fetch real weekly plan data on mount - ONLY if authenticated
   useEffect(() => {
-    const fetchWeeklyPlan = async () => {
-      // Check if user is authenticated before fetching
-      const token = localStorage.getItem('authToken');
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
-      if (!token) {
-        console.log('⏭️ RecipeContext: No auth token found, skipping weekly plan fetch');
+  const refreshWeeklyPlan = useCallback(async () => {
+    const authToken = token ?? localStorage.getItem('authToken');
+
+    if (!authToken && !isTestMode) {
+      console.log('⏭️ RecipeContext: No auth token found, skipping weekly plan fetch');
+      if (isMountedRef.current) {
+        setMealPlans(mockMealPlans);
         setIsLoading(false);
-        return;
       }
+      return;
+    }
+
+    if (isMountedRef.current) {
+      setIsLoading(true);
+    }
+
+    try {
+      console.log('🔄 RecipeContext: Fetching weekly plan data...');
+
+      let currentPlanId: number;
 
       try {
-        console.log('🔄 RecipeContext: Fetching weekly plan data...');
-
-        let currentPlanId: number;
-
-        try {
-          // First try to get the current weekly plan ID
-          const currentPlan = await getWeeklyPlanCurrent();
-          currentPlanId = currentPlan.weekly_plan_id;
-          console.log('✅ RecipeContext: Current weekly plan ID:', currentPlanId);
-        } catch (error: any) {
-          // If no weekly plan exists (404 error), generate one
-          if (error.message?.includes('No active weekly plan')) {
-            console.log('📝 RecipeContext: No weekly plan found, generating one...');
-            const newPlan = await generateWeeklyPlan();
-            currentPlanId = newPlan.weekly_plan_id;
-            console.log('✅ RecipeContext: Weekly plan generated with ID:', currentPlanId);
-          } else {
-            throw error;
-          }
+        const currentPlan = await getWeeklyPlanCurrent();
+        currentPlanId = currentPlan.weekly_plan_id;
+        console.log('✅ RecipeContext: Current weekly plan ID:', currentPlanId);
+      } catch (error: any) {
+        if (error.message?.includes('No active weekly plan')) {
+          console.log('📝 RecipeContext: No weekly plan found, generating one...');
+          const newPlan = await generateWeeklyPlan();
+          currentPlanId = newPlan.weekly_plan_id;
+          console.log('✅ RecipeContext: Weekly plan generated with ID:', currentPlanId);
+        } else {
+          throw error;
         }
+      }
 
-        // Then fetch the full weekly plan with all daily plans
-        const weeklyPlan = await getWeeklyPlan(currentPlanId);
-        console.log('✅ RecipeContext: Weekly plan fetched:', weeklyPlan);
+      const weeklyPlan = await getWeeklyPlan(currentPlanId);
+      console.log('✅ RecipeContext: Weekly plan fetched:', weeklyPlan);
 
-        // Transform API data to MealPlan format
-        const transformedPlans: MealPlan[] = weeklyPlan.daily_plans.map((dailyPlan: DailyPlanOverview) => ({
-          day: dailyPlan.day_of_week,
-          dailyPlanId: dailyPlan.id, // THIS IS THE KEY FIX!
-          date: new Date(dailyPlan.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }),
-          dayName: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'][dailyPlan.day_of_week - 1],
-          calories: dailyPlan.total_calories,
-          macros: {
-            protein: dailyPlan.total_protein,
-            carbs: dailyPlan.total_carbs,
-            fat: dailyPlan.total_fat
-          },
-          meals: {
-            breakfast: [],
-            lunch: [],
-            dinner: [],
-            snacks: []
-          }
-        }));
+      if (!isMountedRef.current) return;
 
-        setMealPlans(transformedPlans);
-        setIsLoading(false);
-      } catch (error) {
-        console.error('❌ RecipeContext: Failed to fetch weekly plan:', error);
-        // Keep using mock data if API fails
-        console.log('⚠️ RecipeContext: Falling back to mock data');
+      const transformedPlans: MealPlan[] = weeklyPlan.daily_plans.map((dailyPlan: DailyPlanOverview) => ({
+        day: dailyPlan.day_of_week,
+        dailyPlanId: dailyPlan.id,
+        date: new Date(dailyPlan.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }),
+        dayName: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'][dailyPlan.day_of_week - 1],
+        calories: dailyPlan.total_calories,
+        macros: {
+          protein: dailyPlan.total_protein,
+          carbs: dailyPlan.total_carbs,
+          fat: dailyPlan.total_fat
+        },
+        meals: {
+          breakfast: [],
+          lunch: [],
+          dinner: [],
+          snacks: []
+        }
+      }));
+
+      setMealPlans(transformedPlans);
+    } catch (error) {
+      console.error('❌ RecipeContext: Failed to fetch weekly plan:', error);
+      console.log('⚠️ RecipeContext: Falling back to mock data');
+      if (isMountedRef.current) {
+        setMealPlans(mockMealPlans);
+      }
+    } finally {
+      if (isMountedRef.current) {
         setIsLoading(false);
       }
-    };
+    }
+  }, [token, isTestMode]);
 
-    fetchWeeklyPlan();
-  }, []);
+  // Fetch real weekly plan data when auth state changes
+  useEffect(() => {
+    refreshWeeklyPlan();
+  }, [refreshWeeklyPlan]);
 
   const markMealAsEaten = (mealId: string) => {
     setEatenMeals(prev => new Set([...prev, mealId]));
@@ -288,7 +307,8 @@ export const RecipeProvider = ({ children }: { children: ReactNode }) => {
     },
     eatenMeals,
     markMealAsEaten,
-    unmarkMealAsEaten
+    unmarkMealAsEaten,
+    refreshWeeklyPlan
   };
 
   return <RecipeContext.Provider value={value}>{children}</RecipeContext.Provider>;

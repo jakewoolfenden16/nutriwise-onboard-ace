@@ -1,14 +1,15 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
 import { Check, Clock, Lock, X, Loader2 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { generateWeeklyPlan } from '@/lib/api';
+import { useRecipe } from '@/contexts/RecipeContext';
 
 export default function PaymentStep() {
   const navigate = useNavigate();
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { refreshWeeklyPlan } = useRecipe();
 
   const handlePurchase = async () => {
     try {
@@ -26,6 +27,9 @@ export default function PaymentStep() {
       const result = await generateWeeklyPlan();
 
       console.log('✅ Weekly plan generated:', result);
+
+      // Refresh the weekly plan in context so downstream views have latest data
+      await refreshWeeklyPlan();
 
       toast({
         title: "Payment Successful! 🎉",

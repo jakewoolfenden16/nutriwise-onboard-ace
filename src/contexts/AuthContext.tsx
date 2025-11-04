@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { signup as apiSignup, login as apiLogin, } from '@/lib/api';
-import {SignupCredentials, LoginCredentials } from '@lib/types';
+import { signup as apiSignup, login as apiLogin } from '@/lib/api';
+import { SignupCredentials, LoginCredentials } from '@lib/types';
 
 interface AuthContextType {
   token: string | null;
@@ -8,6 +8,7 @@ interface AuthContextType {
   signup: (credentials: SignupCredentials) => Promise<void>;
   login: (credentials: LoginCredentials) => Promise<void>;
   logout: () => void;
+  refreshTokenFromStorage: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -15,12 +16,14 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
 
+  const refreshTokenFromStorage = () => {
+    const savedToken = localStorage.getItem('authToken');
+    setToken(savedToken);
+  };
+
   // Load token from localStorage on mount
   useEffect(() => {
-    const savedToken = localStorage.getItem('authToken');
-    if (savedToken) {
-      setToken(savedToken);
-    }
+    refreshTokenFromStorage();
   }, []);
 
   const signup = async (credentials: SignupCredentials) => {
@@ -36,6 +39,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Store in both state and localStorage
     setToken(authToken);
     localStorage.setItem('authToken', authToken);
+    refreshTokenFromStorage();
   };
 
   const logout = () => {
@@ -49,6 +53,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     signup,
     login,
     logout,
+    refreshTokenFromStorage,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
