@@ -33,7 +33,6 @@ export default function WorkoutStep() {
   return (
     <OnboardingLayout
       title="How many times do you usually work out each week?"
-      subtitle="Don't worry, walking counts too."
     >
       <div className="space-y-4">
         {workoutOptions.map((option) => (

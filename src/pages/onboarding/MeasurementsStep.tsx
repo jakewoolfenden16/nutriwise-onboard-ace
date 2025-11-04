@@ -22,8 +22,7 @@ export default function MeasurementsStep() {
 
   return (
     <OnboardingLayout
-      title="Let's get your basics down"
-      subtitle="What's your height and weight?"
+      title="What's your height and weight?"
     >
       <div className="space-y-6">
         {/* Unit Toggle */}

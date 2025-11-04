@@ -26,8 +26,7 @@ export default function GenderStep() {
 
   return (
     <OnboardingLayout
-      title="Let's start simple — what's your gender?"
-      subtitle="This helps us tailor your nutrition plan."
+      title="What's your gender?"
     >
       <div className="grid grid-cols-1 gap-3">
         {genderOptions.map((option) => (

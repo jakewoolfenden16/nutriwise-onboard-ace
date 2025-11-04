@@ -211,7 +211,6 @@ export default function AccountStep() {
   return (
     <OnboardingLayout
       title="Create your account"
-      subtitle="Join thousands getting personalized meal plans"
       hideProgress
     >
       <div className="space-y-6">

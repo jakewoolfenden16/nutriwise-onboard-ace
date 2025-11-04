@@ -57,7 +57,6 @@ export default function WeightGoalStep() {
   return (
     <OnboardingLayout
       title="What weight would you like to be?"
-      subtitle="Let's set a realistic target."
     >
       <div className="bg-card rounded-2xl p-6 shadow-md border border-border space-y-6">
         <div className="text-center">
