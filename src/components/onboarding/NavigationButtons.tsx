@@ -8,6 +8,7 @@ interface NavigationButtonsProps {
   nextLabel?: string;
   nextDisabled?: boolean;
   hideBack?: boolean;
+  nextButtonType?: 'button' | 'submit';
 }
 
 export const NavigationButtons = ({ 
@@ -15,7 +16,8 @@ export const NavigationButtons = ({
   onBack, 
   nextLabel = "Continue", 
   nextDisabled = false,
-  hideBack = false
+  hideBack = false,
+  nextButtonType = 'button'
 }: NavigationButtonsProps) => {
   const navigate = useNavigate();
 
@@ -42,6 +44,7 @@ export const NavigationButtons = ({
       <Button
         onClick={onNext}
         disabled={nextDisabled}
+        type={nextButtonType}
         className="flex-1 h-14 text-base font-semibold"
       >
         {nextLabel}
