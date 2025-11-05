@@ -179,7 +179,7 @@ interface RecipeContextType {
   eatenMeals: Set<string>;
   markMealAsEaten: (mealId: string) => void;
   unmarkMealAsEaten: (mealId: string) => void;
-  refreshWeeklyPlan: () => Promise<void>;
+  refreshWeeklyPlan: (options?: { allowGenerate?: boolean }) => Promise<void>;
 }
 
 const RecipeContext = createContext<RecipeContextType | undefined>(undefined);
@@ -198,7 +198,8 @@ export const RecipeProvider = ({ children }: { children: ReactNode }) => {
     };
   }, []);
 
-  const refreshWeeklyPlan = useCallback(async () => {
+  const refreshWeeklyPlan = useCallback(async (options?: { allowGenerate?: boolean }) => {
+    const allowGenerate = options?.allowGenerate ?? false;
     const authToken = token ?? localStorage.getItem('authToken');
 
     if (!authToken && !isTestMode) {
@@ -223,9 +224,11 @@ export const RecipeProvider = ({ children }: { children: ReactNode }) => {
         const currentPlan = await getWeeklyPlanCurrent();
         currentPlanId = currentPlan.weekly_plan_id;
         console.log('✅ RecipeContext: Current weekly plan ID:', currentPlanId);
-      } catch (error: any) {
-        if (error.message?.includes('No active weekly plan')) {
-          console.log('📝 RecipeContext: No weekly plan found, generating one...');
+      } catch (rawError) {
+        const error = rawError instanceof Error ? rawError : new Error(String(rawError));
+
+        if (allowGenerate && error.message.includes('No active weekly plan')) {
+          console.log('📝 RecipeContext: No weekly plan found, generating one (allowed)...');
           const newPlan = await generateWeeklyPlan();
           currentPlanId = newPlan.weekly_plan_id;
           console.log('✅ RecipeContext: Weekly plan generated with ID:', currentPlanId);
@@ -259,7 +262,8 @@ export const RecipeProvider = ({ children }: { children: ReactNode }) => {
       }));
 
       setMealPlans(transformedPlans);
-    } catch (error) {
+    } catch (rawError) {
+      const error = rawError instanceof Error ? rawError : new Error(String(rawError));
       console.error('❌ RecipeContext: Failed to fetch weekly plan:', error);
       console.log('⚠️ RecipeContext: Falling back to mock data');
       if (isMountedRef.current) {
