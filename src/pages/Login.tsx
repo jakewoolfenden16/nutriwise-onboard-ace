@@ -117,7 +117,8 @@ export default function LoginPage() {
           onNext={() => handleSubmit()}
           nextLabel={isLoading ? 'Logging in...' : 'Log in'}
           hideBack
-          nextDisabled={isLoading}
+          nextDisabled={isLoading || !email || !password}
+          nextButtonType="button"
         />
       </form>
     </OnboardingLayout>
