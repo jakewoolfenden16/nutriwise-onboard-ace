@@ -12,6 +12,7 @@ import NotFound from "./pages/NotFound";
 import RecipeHomepage from "./pages/RecipeHomepage";
 import DayMealsView from "./pages/DayMealsView";
 import RecipeDetailPage from "./pages/RecipeDetailPage";
+import LoginPage from "./pages/Login";
 
 // Onboarding pages
 import GenderStep from "./pages/onboarding/GenderStep";
@@ -72,6 +73,7 @@ const App = () => (
                 <Route path="/recipe" element={<RecipeHomepage />} />
                 <Route path="/day/:dayNumber" element={<DayMealsView />} />
                 <Route path="/recipe/:mealId/:dayNumber" element={<RecipeDetailPage />} />
+                <Route path="/login" element={<LoginPage />} />
                 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
