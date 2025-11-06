@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Check, Clock, Lock, X, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { generateWeeklyPlan } from '@/lib/api';
 import { useRecipe } from '@/contexts/RecipeContext';
@@ -60,38 +60,45 @@ export default function PaymentStep() {
         {/* Hero Section */}
         <div className="text-center space-y-6 mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-foreground leading-tight">
-            One Day. 150 g+ Protein. Dialled-In Nutrition.
+            7 Days of Dialled In Nutrition.
           </h1>
-          <div className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-full text-lg font-semibold">
-            £1.99 – One-time payment
-          </div>
+
+          {/* CTA Button */}
+          <button
+            onClick={handlePurchase}
+            disabled={isGenerating}
+            className="inline-flex items-center justify-center h-14 px-8 text-lg font-semibold rounded-md bg-primary text-primary-foreground hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isGenerating ? (
+              <>
+                <Loader2 className="h-5 w-5 animate-spin mr-2" />
+                Generating your meal plan...
+              </>
+            ) : (
+              'Get Your 7-Day Plan →'
+            )}
+          </button>
         </div>
 
-        {/* What You're Getting */}
+        {/* What You Get */}
         <div className="bg-card border border-border rounded-2xl p-8 mb-10 shadow-sm">
-          <h2 className="text-2xl font-bold text-foreground mb-6">What You're Getting</h2>
-          <div className="space-y-4">
-            {[
-              'Complete 1-day meal plan — Breakfast, lunch, dinner, and snacks hitting your exact protein targets',
-              'Detailed recipes — Step-by-step instructions, prep times, and macro breakdowns for every meal',
-              'Macro tracking sheet — Daily protein, carbs, fat, and calorie totals that match your goals',
-            ].map((item, i) => (
-              <div key={i} className="flex items-start gap-3">
-                <Check className="h-6 w-6 text-primary flex-shrink-0 mt-0.5" />
-                <p className="text-foreground leading-relaxed">{item}</p>
-              </div>
-            ))}
-          </div>
+          <h2 className="text-2xl font-bold text-foreground mb-6">What You Get</h2>
+          <p className="text-foreground leading-relaxed mb-4">
+            A complete 7-day meal plan with breakfast, lunch, dinner, and snacks hitting your exact macro targets.
+          </p>
+          <p className="text-foreground leading-relaxed">
+            Each meal comes with step-by-step recipes, prep times, and full macro breakdowns.
+          </p>
         </div>
 
-        {/* Perfect For */}
+        {/* Why You'll Love It */}
         <div className="bg-card border border-border rounded-2xl p-8 mb-10 shadow-sm">
-          <h2 className="text-2xl font-bold text-foreground mb-6">Perfect For</h2>
+          <h2 className="text-2xl font-bold text-foreground mb-6">Why You'll Love It</h2>
           <div className="space-y-3">
             {[
-              'Build lean muscle faster with 150–200g protein daily',
-              'Meal prep made simple — recipes you&apos;ll actually enjoy',
-              'No more guesswork — hit your macros with confidence',
+              'More protein. Less guesswork.',
+              "Meals you'll actually enjoy eating.",
+              'Your macros dialled in for the week.',
             ].map((item, i) => (
               <p key={i} className="text-foreground leading-relaxed">
                 • {item}
@@ -108,41 +115,22 @@ export default function PaymentStep() {
         )}
 
         {/* CTA Button */}
-        <button
-          onClick={handlePurchase}
-          disabled={isGenerating}
-          className="w-full inline-flex items-center justify-center h-14 text-lg font-semibold rounded-md bg-primary text-primary-foreground hover:opacity-90 transition mb-6 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {isGenerating ? (
-            <>
-              <Loader2 className="h-5 w-5 animate-spin mr-2" />
-              Generating your meal plan...
-            </>
-          ) : (
-            'Get My Plan for £1.99 →'
-          )}
-        </button>
-
-        {/* Trust Anchors */}
-        <div className="flex items-center justify-center gap-6 mb-6 text-sm text-muted-foreground flex-wrap">
-          <div className="flex items-center gap-2">
-            <Clock className="h-4 w-4" />
-            <span>Instant access</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Lock className="h-4 w-4" />
-            <span>Secure checkout</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <X className="h-4 w-4" />
-            <span>No subscription</span>
-          </div>
+        <div className="flex justify-center">
+          <button
+            onClick={handlePurchase}
+            disabled={isGenerating}
+            className="inline-flex items-center justify-center h-14 px-8 text-lg font-semibold rounded-md bg-primary text-primary-foreground hover:opacity-90 transition mb-6 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isGenerating ? (
+              <>
+                <Loader2 className="h-5 w-5 animate-spin mr-2" />
+                Generating your meal plan...
+              </>
+            ) : (
+              'Get Your 7-Day Plan →'
+            )}
+          </button>
         </div>
-
-        {/* Refund Statement */}
-        <p className="text-center text-sm text-muted-foreground leading-relaxed">
-          You&apos;ll get your 1-day high-protein plan instantly. If it&apos;s not for you, just drop us a message and we&apos;ll refund you.
-        </p>
 
         {/* DEV MODE: Test button to skip to recipe homepage */}
         {import.meta.env.DEV && (
