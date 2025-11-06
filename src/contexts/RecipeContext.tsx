@@ -1,6 +1,6 @@
 import { createContext, useContext, ReactNode, useState, useEffect, useCallback, useRef } from 'react';
-import { getWeeklyPlanCurrent, getWeeklyPlan, generateWeeklyPlan } from '@/lib/api';
-import type { DailyPlanOverview } from '@/lib/types';
+import { getWeeklyPlanCurrent, getWeeklyPlan, generateWeeklyPlan, getDailyPlanMeals } from '@/lib/api';
+import type { DailyPlanOverview, DailyPlanMeals, MealDetail, WeeklyPlanDetail } from '@/lib/types';
 import { useAuth } from '@/contexts/AuthContext';
 
 export interface Meal {
@@ -187,6 +187,17 @@ const RecipeContext = createContext<RecipeContextType | undefined>(undefined);
 export const RecipeProvider = ({ children }: { children: ReactNode }) => {
   const [eatenMeals, setEatenMeals] = useState<Set<string>>(new Set());
   const [mealPlans, setMealPlans] = useState<MealPlan[]>(mockMealPlans);
+  const [weeklyTargets, setWeeklyTargets] = useState({
+    calories: 2100,
+    protein: 150,
+    carbs: 210,
+    fat: 78
+  });
+  const [estimatedWeightChange, setEstimatedWeightChange] = useState({
+    min: -0.5,
+    max: -0.7,
+    unit: 'kg' as const
+  });
   const [, setIsLoading] = useState(true);
   const { token } = useAuth();
   const isMountedRef = useRef(true);
@@ -202,9 +213,10 @@ export const RecipeProvider = ({ children }: { children: ReactNode }) => {
     const allowGenerate = options?.allowGenerate ?? false;
     const authToken = token ?? localStorage.getItem('authToken');
     const hasPendingQuestionnaire = Boolean(localStorage.getItem('pendingQuestionnaire'));
+    const isProfileReady = localStorage.getItem('profileReady') === 'true';
 
-    if (hasPendingQuestionnaire) {
-      console.log('⏳ RecipeContext: Pending onboarding data detected, skipping weekly plan fetch');
+    if (hasPendingQuestionnaire || (!isProfileReady && !isTestMode)) {
+      console.log('⏳ RecipeContext: Onboarding not complete, skipping weekly plan fetch');
       if (isMountedRef.current) {
         setMealPlans(mockMealPlans);
         setIsLoading(false);
@@ -247,29 +259,79 @@ export const RecipeProvider = ({ children }: { children: ReactNode }) => {
         }
       }
 
-      const weeklyPlan = await getWeeklyPlan(currentPlanId);
+      const weeklyPlan: WeeklyPlanDetail = await getWeeklyPlan(currentPlanId);
       console.log('✅ RecipeContext: Weekly plan fetched:', weeklyPlan);
 
       if (!isMountedRef.current) return;
 
-      const transformedPlans: MealPlan[] = weeklyPlan.daily_plans.map((dailyPlan: DailyPlanOverview) => ({
-        day: dailyPlan.day_of_week,
-        dailyPlanId: dailyPlan.id,
-        date: new Date(dailyPlan.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }),
-        dayName: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'][dailyPlan.day_of_week - 1],
-        calories: dailyPlan.total_calories,
-        macros: {
-          protein: dailyPlan.total_protein,
-          carbs: dailyPlan.total_carbs,
-          fat: dailyPlan.total_fat
-        },
-        meals: {
-          breakfast: [],
-          lunch: [],
-          dinner: [],
-          snacks: []
-        }
-      }));
+      const planTargets = {
+        calories: weeklyPlan.weekly_plan.weekly_target_calories,
+        protein: weeklyPlan.weekly_plan.weekly_target_protein,
+        carbs: weeklyPlan.weekly_plan.weekly_target_carbs,
+        fat: weeklyPlan.weekly_plan.weekly_target_fat
+      };
+      setWeeklyTargets(planTargets);
+
+      if (weeklyPlan.weekly_plan.planned_weekly_weight_change_min !== undefined &&
+        weeklyPlan.weekly_plan.planned_weekly_weight_change_max !== undefined) {
+        setEstimatedWeightChange({
+          min: weeklyPlan.weekly_plan.planned_weekly_weight_change_min,
+          max: weeklyPlan.weekly_plan.planned_weekly_weight_change_max,
+          unit: weeklyPlan.weekly_plan.planned_weekly_weight_change_unit ?? 'kg'
+        });
+      }
+
+      const mapMealDetailToMeal = (mealDetail: MealDetail): Meal => ({
+        id: mealDetail.id.toString(),
+        name: mealDetail.recipes?.name || 'Meal',
+        image: '/placeholder.svg',
+        calories: mealDetail.actual_calories ?? mealDetail.recipes?.calories ?? 0,
+        protein: mealDetail.actual_protein ?? mealDetail.recipes?.protein ?? 0,
+        carbs: mealDetail.actual_carbs ?? mealDetail.recipes?.carbohydrates ?? 0,
+        fat: mealDetail.actual_fat ?? mealDetail.recipes?.fat ?? 0,
+        prepTime: 15,
+        mealType: (mealDetail.meal_type as Meal['mealType'])
+      });
+
+      const transformedPlans: MealPlan[] = await Promise.all(
+        weeklyPlan.daily_plans.map(async (dailyPlan: DailyPlanOverview) => {
+          let mealsData: DailyPlanMeals | null = null;
+
+          try {
+            mealsData = await getDailyPlanMeals(dailyPlan.id);
+            console.log(`🍽️ RecipeContext: Loaded meals for daily plan ${dailyPlan.id}`, mealsData);
+          } catch (mealError) {
+            console.warn(`⚠️ RecipeContext: Unable to load meals for daily plan ${dailyPlan.id}`, mealError);
+          }
+
+          const groupedMeals: MealPlan['meals'] = {
+            breakfast: [],
+            lunch: [],
+            dinner: [],
+            snacks: []
+          };
+
+          mealsData?.meals.forEach((mealDetail: MealDetail) => {
+            const mappedMeal = mapMealDetailToMeal(mealDetail);
+            const bucket = mappedMeal.mealType === 'snack' ? 'snacks' : mappedMeal.mealType;
+            groupedMeals[bucket].push(mappedMeal);
+          });
+
+          return {
+            day: dailyPlan.day_of_week,
+            dailyPlanId: dailyPlan.id,
+            date: new Date(dailyPlan.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }),
+            dayName: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'][dailyPlan.day_of_week - 1],
+            calories: dailyPlan.total_calories,
+            macros: {
+              protein: dailyPlan.total_protein,
+              carbs: dailyPlan.total_carbs,
+              fat: dailyPlan.total_fat
+            },
+            meals: groupedMeals
+          };
+        })
+      );
 
       setMealPlans(transformedPlans);
     } catch (rawError) {
@@ -309,15 +371,15 @@ export const RecipeProvider = ({ children }: { children: ReactNode }) => {
     healthScore: 95,
     userName: undefined,
     weeklyTargets: {
-      calories: 2100,
-      protein: 150,
-      carbs: 210,
-      fat: 78
+      calories: weeklyTargets.calories,
+      protein: weeklyTargets.protein,
+      carbs: weeklyTargets.carbs,
+      fat: weeklyTargets.fat
     },
     estimatedWeightChange: {
-      min: -0.5,
-      max: -0.7,
-      unit: 'kg' as const
+      min: estimatedWeightChange.min,
+      max: estimatedWeightChange.max,
+      unit: estimatedWeightChange.unit
     },
     eatenMeals,
     markMealAsEaten,

@@ -19,6 +19,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const refreshTokenFromStorage = () => {
     const savedToken = localStorage.getItem('authToken');
     setToken(savedToken);
+    if (savedToken && !localStorage.getItem('profileReady')) {
+      localStorage.setItem('profileReady', 'true');
+    }
   };
 
   // Load token from localStorage on mount
@@ -39,12 +42,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Store in both state and localStorage
     setToken(authToken);
     localStorage.setItem('authToken', authToken);
+    localStorage.setItem('profileReady', 'true');
     refreshTokenFromStorage();
   };
 
   const logout = () => {
     setToken(null);
     localStorage.removeItem('authToken');
+    localStorage.removeItem('profileReady');
   };
 
   const value = {

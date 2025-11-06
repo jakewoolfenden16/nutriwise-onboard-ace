@@ -155,6 +155,9 @@ export interface WeeklyPlanDetail {
     weekly_target_carbs: number;
     weekly_target_fat: number;
     created_at: string;
+    planned_weekly_weight_change_min?: number;
+    planned_weekly_weight_change_max?: number;
+    planned_weekly_weight_change_unit?: 'kg' | 'lbs';
   };
   daily_plans: DailyPlanOverview[];
   total_days: number;

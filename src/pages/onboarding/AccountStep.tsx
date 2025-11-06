@@ -52,27 +52,28 @@ export default function AccountStep() {
           // Get questionnaire data from localStorage (saved during signup)
           const pendingQuestionnaire = localStorage.getItem('pendingQuestionnaire');
 
-          if (pendingQuestionnaire) {
-            const questionnaireData = JSON.parse(pendingQuestionnaire);
+      if (pendingQuestionnaire) {
+        const questionnaireData = JSON.parse(pendingQuestionnaire);
 
-            // Create profile with the data
-            console.log('📝 Creating profile with questionnaire data...');
-            await createProfile({
-              gender: questionnaireData.gender as 'male' | 'female',
-              height: questionnaireData.height,
-              weight: questionnaireData.weight,
-              age: questionnaireData.age,
-              workouts_per_week: questionnaireData.workoutFrequency,
-              goal: questionnaireData.goal as 'lose' | 'maintain' | 'build',
-              weight_goal: questionnaireData.weightGoal,
-              planned_weekly_weight_loss: questionnaireData.weeklyWeightLoss || 0.5,
-            });
+        // Create profile with the data
+        console.log('📝 Creating profile with questionnaire data...');
+        await createProfile({
+          gender: questionnaireData.gender as 'male' | 'female',
+          height: questionnaireData.height,
+          weight: questionnaireData.weight,
+          age: questionnaireData.age,
+          workouts_per_week: questionnaireData.workoutFrequency,
+          goal: questionnaireData.goal as 'lose' | 'maintain' | 'build',
+          weight_goal: questionnaireData.weightGoal,
+          planned_weekly_weight_loss: questionnaireData.weeklyWeightLoss || 0.5,
+        });
 
-            console.log('✅ Profile created successfully!');
+        console.log('✅ Profile created successfully!');
 
-            // Clean up localStorage
-            localStorage.removeItem('pendingQuestionnaire');
-          }
+        // Clean up localStorage
+        localStorage.removeItem('pendingQuestionnaire');
+        localStorage.setItem('profileReady', 'true');
+      }
 
           // Navigate to payment page
           console.log('➡️ Navigating to payment page');
@@ -146,6 +147,7 @@ export default function AccountStep() {
       
       // Store in localStorage as fallback if we have questionnaire data
       if (questionnaireData) {
+        localStorage.removeItem('profileReady');
         localStorage.setItem('pendingQuestionnaire', JSON.stringify(questionnaireData));
       }
       
