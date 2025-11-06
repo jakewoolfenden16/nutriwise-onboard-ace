@@ -10,9 +10,17 @@ interface WeeklyTargetsCardProps {
 }
 
 export const WeeklyTargetsCard = ({ targets }: WeeklyTargetsCardProps) => {
+  const dailyTargets = {
+    calories: Math.round(targets.calories / 7),
+    protein: Math.round(targets.protein / 7),
+    carbs: Math.round(targets.carbs / 7),
+    fat: Math.round(targets.fat / 7)
+  };
+
   return (
     <div className="rounded-2xl shadow-sm bg-card p-6 border border-border">
-      <h2 className="text-lg font-semibold mb-4">Your Weekly Targets</h2>
+      <h2 className="text-lg font-semibold mb-2">Your Daily Targets</h2>
+      <p className="text-xs text-muted-foreground mb-4">Calculated from your weekly plan averages</p>
       
       <div className="grid grid-cols-2 gap-6">
         {/* Calories */}
@@ -20,7 +28,7 @@ export const WeeklyTargetsCard = ({ targets }: WeeklyTargetsCardProps) => {
           <Flame className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
           <div className="flex flex-col">
             <span className="text-sm text-muted-foreground">Calories</span>
-            <span className="text-2xl font-bold text-primary">{targets.calories} kcal</span>
+            <span className="text-2xl font-bold text-primary">{dailyTargets.calories} kcal</span>
           </div>
         </div>
 
@@ -29,7 +37,7 @@ export const WeeklyTargetsCard = ({ targets }: WeeklyTargetsCardProps) => {
           <Dumbbell className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
           <div className="flex flex-col">
             <span className="text-sm text-muted-foreground">Protein</span>
-            <span className="text-2xl font-bold text-primary">{targets.protein}g</span>
+            <span className="text-2xl font-bold text-primary">{dailyTargets.protein}g</span>
           </div>
         </div>
 
@@ -38,7 +46,7 @@ export const WeeklyTargetsCard = ({ targets }: WeeklyTargetsCardProps) => {
           <Wheat className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
           <div className="flex flex-col">
             <span className="text-sm text-muted-foreground">Carbs</span>
-            <span className="text-2xl font-bold text-primary">{targets.carbs}g</span>
+            <span className="text-2xl font-bold text-primary">{dailyTargets.carbs}g</span>
           </div>
         </div>
 
@@ -47,7 +55,7 @@ export const WeeklyTargetsCard = ({ targets }: WeeklyTargetsCardProps) => {
           <Droplet className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
           <div className="flex flex-col">
             <span className="text-sm text-muted-foreground">Fat</span>
-            <span className="text-2xl font-bold text-primary">{targets.fat}g</span>
+            <span className="text-2xl font-bold text-primary">{dailyTargets.fat}g</span>
           </div>
         </div>
       </div>
