@@ -201,6 +201,16 @@ export const RecipeProvider = ({ children }: { children: ReactNode }) => {
   const refreshWeeklyPlan = useCallback(async (options?: { allowGenerate?: boolean }) => {
     const allowGenerate = options?.allowGenerate ?? false;
     const authToken = token ?? localStorage.getItem('authToken');
+    const hasPendingQuestionnaire = Boolean(localStorage.getItem('pendingQuestionnaire'));
+
+    if (hasPendingQuestionnaire) {
+      console.log('⏳ RecipeContext: Pending onboarding data detected, skipping weekly plan fetch');
+      if (isMountedRef.current) {
+        setMealPlans(mockMealPlans);
+        setIsLoading(false);
+      }
+      return;
+    }
 
     if (!authToken && !isTestMode) {
       console.log('⏭️ RecipeContext: No auth token found, skipping weekly plan fetch');
