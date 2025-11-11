@@ -4,7 +4,6 @@ import { OnboardingLayout } from '@/components/onboarding/OnboardingLayout';
 import { NavigationButtons } from '@/components/onboarding/NavigationButtons';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { useAuth } from '@/contexts/AuthContext';
-import { createProfile } from '@/lib/api';
 import { Mail, Lock, User, Eye, EyeOff, Loader2 } from 'lucide-react';
 
 export default function AccountStep() {
@@ -49,31 +48,14 @@ export default function AccountStep() {
           // Clean up URL
           window.history.replaceState({}, document.title, window.location.pathname);
 
-          // Get questionnaire data from localStorage (saved during signup)
-          const pendingQuestionnaire = localStorage.getItem('pendingQuestionnaire');
+          // Clean up questionnaire fallback data — backend triggers now build the profile
+          if (localStorage.getItem('pendingQuestionnaire')) {
+            console.log('🧹 Removing pending questionnaire data (handled server-side)');
+            localStorage.removeItem('pendingQuestionnaire');
+          }
 
-      if (pendingQuestionnaire) {
-        const questionnaireData = JSON.parse(pendingQuestionnaire);
-
-        // Create profile with the data
-        console.log('📝 Creating profile with questionnaire data...');
-        await createProfile({
-          gender: questionnaireData.gender as 'male' | 'female',
-          height: questionnaireData.height,
-          weight: questionnaireData.weight,
-          age: questionnaireData.age,
-          workouts_per_week: questionnaireData.workoutFrequency,
-          goal: questionnaireData.goal as 'lose' | 'maintain' | 'build',
-          weight_goal: questionnaireData.weightGoal,
-          planned_weekly_weight_loss: questionnaireData.weeklyWeightLoss || 0.5,
-        });
-
-        console.log('✅ Profile created successfully!');
-
-        // Clean up localStorage
-        localStorage.removeItem('pendingQuestionnaire');
-        localStorage.setItem('profileReady', 'true');
-      }
+          // Mark profile as ready so RecipeContext can fetch plans
+          localStorage.setItem('profileReady', 'true');
 
           // Navigate to payment page
           console.log('➡️ Navigating to payment page');
